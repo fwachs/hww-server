@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
+<log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/">
+
+	<appender name="CONSOLE" class="org.apache.log4j.ConsoleAppender">
+		<param name="Target" value="System.out" />
+		<param name="Threshold" value="DEBUG" />
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%d %c [%t] %-5p - %m%n" />
+		</layout>
+	</appender>
+
+	<appender name="APP" class="org.apache.log4j.RollingFileAppender">
+		<param name="file" value="/logs/hww.log" />
+		<param name="MaxFileSize" value="100MB" />
+		<param name="MaxBackupIndex" value="75" />
+		<param name="Append" value="true" />
+		<param name="Threshold" value="DEBUG" />
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%d %c [%t] %-5p - %m%n" />
+		</layout>
+	</appender>
+
+	<appender name="ASYNC" class="org.apache.log4j.AsyncAppender">
+	    <param name="Blocking" value="false"/>
+	    <param name="BufferSize" value="1024" /> 
+		<appender-ref ref="APP" />
+		<appender-ref ref="CONSOLE" />
+	</appender>
+
+	<category name="com.twoclams" additivity="false">
+		<priority value="INFO" />
+		<appender-ref ref="ASYNC" />
+	</category>
+
+	<category name="org.springframework" additivity="false">
+		<priority value="ERROR" />
+		<appender-ref ref="ASYNC" />
+	</category>
+
+	<root>
+		<priority value="info" />
+		<appender-ref ref="ASYNC" />
+	</root>
+</log4j:configuration>

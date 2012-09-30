@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:vld="http://www.springmodules.org/validation/bean/validator"
+	xsi:schemaLocation="
+		http://www.springframework.org/schema/beans
+		http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/aop
+		http://www.springframework.org/schema/aop/spring-aop-3.0.xsd
+		http://www.springframework.org/schema/context
+		http://www.springframework.org/schema/context/spring-context.xsd
+		http://www.springframework.org/schema/tx
+		http://www.springframework.org/schema/tx/spring-tx-3.0.xsd
+		http://www.springmodules.org/validation/bean/validator
+		http://www.springmodules.org/validation/bean/validator.xsd">
+
+	<context:annotation-config/>
+	<context:property-placeholder/>
+
+	<bean id="jedisPoolConfig" class="redis.clients.jedis.JedisPoolConfig"/>
+
+	<!--  *********************************** Wifes CACHE *********************************************************  -->
+    <bean id="wifeDao" class="com.twoclams.hww.server.cache.RoundRobinCompositeCacheManager" destroy-method="shutdown">
+        <description>
+         This cacheUsersManager has a High concurrency volume, so we use several clients to round robin
+         to the same servers.
+        </description>
+        <property name="cacheList">
+            <list>
+                <ref bean="cacheWifesManager.template" />
+                <ref bean="cacheWifesManager.template" />
+                <ref bean="cacheWifesManager.template" />
+                <ref bean="cacheWifesManager.template" />
+                <ref bean="cacheWifesManager.template" />
+            </list>
+        </property>
+    </bean>
+	
+    <bean id="cacheWifesManager.template" scope="prototype" class="com.twoclams.hww.server.cache.redis.RedisCacheManager" destroy-method="shutdown">
+        <description>
+        </description>
+        <property name="pool">
+	        <bean class="redis.clients.jedis.JedisPool">
+		        <constructor-arg index="0" ref="jedisPoolConfig"/>
+		        <constructor-arg index="1" value="localhost"/>
+		        <constructor-arg index="2" value="6379"/>
+		        <constructor-arg index="3" value="5000"/>
+		    </bean>
+        </property>
+        <property name="enabled" value="true" />
+    </bean>
+
+	<!--  *********************************** Husbands CACHE *********************************************************  -->
+    <bean id="husbandDao" class="com.twoclams.hww.server.cache.RoundRobinCompositeCacheManager" destroy-method="shutdown">
+        <description>
+         This cacheUsersManager has a High concurrency volume, so we use several clients to round robin
+         to the same servers.
+        </description>
+        <property name="cacheList">
+            <list>
+                <ref bean="cacheHusbandManager.template" />
+                <ref bean="cacheHusbandManager.template" />
+                <ref bean="cacheHusbandManager.template" />
+                <ref bean="cacheHusbandManager.template" />
+                <ref bean="cacheHusbandManager.template" />
+            </list>
+        </property>
+    </bean>
+	
+    <bean id="cacheHusbandManager.template" scope="prototype" class="com.twoclams.hww.server.cache.redis.RedisCacheManager" destroy-method="shutdown">
+        <description>
+        </description>
+        <property name="pool">
+	        <bean class="redis.clients.jedis.JedisPool">
+		        <constructor-arg index="0" ref="jedisPoolConfig"/>
+		        <constructor-arg index="1" value="localhost"/>
+		        <constructor-arg index="2" value="6379"/>
+		        <constructor-arg index="3" value="5000"/>
+		    </bean>
+        </property>
+        <property name="enabled" value="true" />
+    </bean>
+</beans>
