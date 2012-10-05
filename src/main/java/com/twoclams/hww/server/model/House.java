@@ -12,6 +12,7 @@ public class House implements Serializable {
     private List<HouseFurniture> furnitures;
     private List<HouseFurniture> storage;
     private List<HouseTile> customTiles;
+    private volatile boolean isEmpty;
 
     public House() {
         furnitures = new ArrayList<HouseFurniture>();
@@ -19,6 +20,7 @@ public class House implements Serializable {
         customTiles = new ArrayList<HouseTile>();
         type = "brick-yellow";
         level = 1;
+        isEmpty = true;
     }
 
     public House(String type, Integer level, List<HouseFurniture> houseFurnitures,
@@ -49,6 +51,10 @@ public class House implements Serializable {
     public List<HouseTile> getCustomTiles() {
         return customTiles;
     }
+
+    public boolean isEmpty() {
+		return isEmpty;
+	}
 
     @Override
     public String toString() {

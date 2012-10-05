@@ -54,7 +54,10 @@ public class BaseController {
 
     protected Housewife buildWife(JSONObject wifeJson) throws JSONException {
         String id = new String(wifeJson.get("id").toString());
-        String wifeName = (String) wifeJson.get("name");
+        Object wifeName = wifeJson.get("name");
+        if (wifeName == null) {
+            wifeName = "MysteryWife";
+        }
         Integer socialStatusPoints = (Integer) wifeJson.get("socialStatusPoints");
         Housewife.Type type = Housewife.Type.valueOf((String) wifeJson.get("type"));
         JSONArray jsonSkinTone = (JSONArray) wifeJson.get("skinTone");
@@ -64,7 +67,7 @@ public class BaseController {
         }
         Integer hairColor = (Integer) wifeJson.get("hairColor");
         Integer hairStyle = (Integer) wifeJson.get("hairStyle");
-        return new Housewife(id, wifeName, socialStatusPoints, type, skinTone, hairColor, hairStyle);
+        return new Housewife(id, wifeName.toString(), socialStatusPoints, type, skinTone, hairColor, hairStyle);
     }
 
     protected House buildHouse(String type, String level, String furnituresJsonStr,

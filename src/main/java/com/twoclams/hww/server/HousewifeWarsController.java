@@ -29,6 +29,7 @@ import com.twoclams.hww.server.model.Housewife;
 import com.twoclams.hww.server.model.Husband;
 import com.twoclams.hww.server.model.OtherPlayerProfileResponse;
 import com.twoclams.hww.server.model.SimpleResponse;
+import com.twoclams.hww.server.model.SynchronizeResponse;
 import com.twoclams.hww.server.service.UsersService;
 import com.twoclams.hww.server.utils.DateUtils;
 
@@ -39,11 +40,47 @@ public class HousewifeWarsController extends BaseController {
     @Autowired
     private UsersService userService;
 
+    @RequestMapping(value = "/synchronize")
+    @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
+    public String synchronizeGame(@RequestParam(value = "papayaUserId") String papayaUserId, HttpServletRequest request)
+            throws IOException {
+        SynchronizeResponse response = userService.synchronizeGame(papayaUserId);
+
+        return getDefaultSerializer().deepSerialize(response);
+    }
+
+    @RequestMapping(value = "/synchronizeGame")
+    @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
+    public String synchronizeGame(@RequestParam(value = "wife") String wifeJsonStr,
+            @RequestParam(value = "husband") String husbandJsonStr,
+            @RequestParam(value = "wallet") String walletJsonStr,
+            @RequestParam(value = "passport") String passportJsonStr,
+            @RequestParam(value = "house") String houseJsonStr, HttpServletRequest request) throws IOException {
+        Husband husband = null;
+        Housewife housewife = null;
+        try {
+            husband = this.buildHusband(new JSONObject(husbandJsonStr));
+        } catch (JSONException e) {
+            logger.error("An error ocurred while processing husband json: " + husbandJsonStr, e);
+        }
+
+        try {
+            logger.info("WifeJson: " + wifeJsonStr);
+            housewife = this.buildWife(new JSONObject(wifeJsonStr));
+            logger.info("WifeBuilt: " + housewife.toString());
+        } catch (JSONException e) {
+            logger.error("An error ocurred while processing wife json: " + wifeJsonStr, e);
+        }
+        SimpleResponse response = userService.registeUser(housewife, husband);
+        return this.getDefaultSerializer().deepSerialize(response);
+    }
+
     @RequestMapping(value = "/syncHusband")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
-    public String syncHusband(@ModelAttribute Husband husband, HttpServletRequest request)
-            throws IOException {
+    public String syncHusband(@ModelAttribute Husband husband, HttpServletRequest request) throws IOException {
         SimpleResponse response = userService.synchronizeHusband(husband);
         return getDefaultSerializer().deepSerialize(response);
     }
@@ -51,8 +88,7 @@ public class HousewifeWarsController extends BaseController {
     @RequestMapping(value = "/syncWife")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
-    public String syncWife(@ModelAttribute Housewife housewife, HttpServletRequest request)
-            throws IOException {
+    public String syncWife(@ModelAttribute Housewife housewife, HttpServletRequest request) throws IOException {
         housewife.setSkinTones(this.getSkinTone(request));
         SimpleResponse response = userService.synchronizeHousewife(housewife);
         return getDefaultSerializer().deepSerialize(response);
@@ -62,8 +98,7 @@ public class HousewifeWarsController extends BaseController {
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
     public String register(@RequestParam(value = "wife") String wifeJsonStr,
-            @RequestParam(value = "husband") String husbandJsonStr, HttpServletRequest request)
-            throws IOException {
+            @RequestParam(value = "husband") String husbandJsonStr, HttpServletRequest request) throws IOException {
         Husband husband = null;
         Housewife housewife = null;
         try {
@@ -86,19 +121,17 @@ public class HousewifeWarsController extends BaseController {
     @RequestMapping(value = "/getOtherPlayerProfile")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
-    public String getOtherPlayerProfile(@RequestParam(value = "userId") String userId,
-            HttpServletRequest request) throws IOException, JSONException {
+    public String getOtherPlayerProfile(@RequestParam(value = "userId") String userId, HttpServletRequest request)
+            throws IOException, JSONException {
         OtherPlayerProfileResponse response = userService.getOtherPlayerProfile(userId);
 
-        return this.getDefaultSerializer().include("messages").include("skinTone")
-                .deepSerialize(response);
+        return this.getDefaultSerializer().include("messages").include("skinTone").deepSerialize(response);
     }
 
     @RequestMapping(value = "/getCurrentDateAndTick")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
-    public String getCurrentDateAndTick(HttpServletRequest request) throws IOException,
-            JSONException {
+    public String getCurrentDateAndTick(HttpServletRequest request) throws IOException, JSONException {
         DateFormat dateFormatter = new SimpleDateFormat("MM/dd/yyyy");
         DateTime start = new DateTime(2012, 1, 1, 0, 0, 0, 0);
         Date today = new Date();
@@ -114,8 +147,8 @@ public class HousewifeWarsController extends BaseController {
     @RequestMapping(value = "/getDailyBonus")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
-    public String getDailyBonus(@RequestParam(value = "papayaUserId") String papayaUserId,
-            HttpServletRequest request) throws IOException, JSONException {
+    public String getDailyBonus(@RequestParam(value = "papayaUserId") String papayaUserId, HttpServletRequest request)
+            throws IOException, JSONException {
         Map<String, Object> response = new HashMap<String, Object>();
         DateFormat dateFormatter = new SimpleDateFormat("MM/dd/yyyy");
 
