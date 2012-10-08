@@ -7,6 +7,7 @@ import java.util.List;
 public class House implements Serializable {
     private static final long serialVersionUID = 5507003990317674340L;
 
+    private String papayaUserId;
     private String type;
     private Integer level;
     private List<HouseFurniture> furnitures;
@@ -32,6 +33,12 @@ public class House implements Serializable {
         this.customTiles = tiles;
     }
 
+    public House(String type, Integer level, List<HouseFurniture> houseFurnitures, List<HouseFurniture> houseStorage,
+            List<HouseTile> tiles, String papayaUserId) {
+        this(type, level, houseFurnitures, houseStorage, tiles);
+        this.papayaUserId = papayaUserId;
+    }
+
     public Integer getLevel() {
         return level;
     }
@@ -55,6 +62,14 @@ public class House implements Serializable {
     public boolean isEmpty() {
 		return isEmpty;
 	}
+
+    public String getPapayaUserId() {
+        return papayaUserId;
+    }
+
+    public void setPapayaUserId(String papayaUserId) {
+        this.papayaUserId = papayaUserId;
+    }
 
     @Override
     public String toString() {

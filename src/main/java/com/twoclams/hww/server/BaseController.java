@@ -48,8 +48,7 @@ public class BaseController {
         Integer stressLevel = (Integer) husbandJson.get("stressMeterValue");
         Integer loveTank = (Integer) husbandJson.get("loveTankValue");
         Integer totalVisits = (Integer) husbandJson.get("citiesVisited");
-        return new Husband(id, occupation, String.valueOf(name), careerLevel, stressLevel,
-                loveTank, totalVisits);
+        return new Husband(id, occupation, String.valueOf(name), careerLevel, stressLevel, loveTank, totalVisits);
     }
 
     protected Housewife buildWife(JSONObject wifeJson) throws JSONException {
@@ -70,8 +69,8 @@ public class BaseController {
         return new Housewife(id, wifeName.toString(), socialStatusPoints, type, skinTone, hairColor, hairStyle);
     }
 
-    protected House buildHouse(String type, String level, String furnituresJsonStr,
-            String storageJsonStr, String customTilesJsonStr) {
+    protected House buildHouse(String type, String level, String furnituresJsonStr, String storageJsonStr,
+            String customTilesJsonStr) {
         String[] customTiles = customTilesJsonStr.replace("[", "").replace("]", "").split("},");
         List<HouseTile> tiles = new ArrayList<HouseTile>();
         for (String customTile : customTiles) {
@@ -117,4 +116,31 @@ public class BaseController {
         return new House(type, Integer.valueOf(level), houseFurnitures, houseStorage, tiles);
     }
 
+    protected House buildHouse(JSONObject jsonObject) throws JSONException {
+        Integer level = jsonObject.getInt("level");
+        String papayaUserId = jsonObject.getString("papayaUserId");
+        JSONArray furnitures = jsonObject.getJSONArray("furnitures");
+        List<HouseFurniture> houseFurnitures = new ArrayList<HouseFurniture>();
+        for (int i = 0; i < furnitures.length(); i++) {
+            JSONObject row = furnitures.getJSONObject(i);
+            HouseFurniture furniture = new HouseFurniture(row);
+            houseFurnitures.add(furniture);
+        }
+        JSONArray storage = jsonObject.getJSONArray("storage");
+        List<HouseFurniture> houseStorage = new ArrayList<HouseFurniture>();
+        for (int i = 0; i < storage.length(); i++) {
+            JSONObject row = storage.getJSONObject(i);
+            HouseFurniture furniture = new HouseFurniture(row);
+            houseStorage.add(furniture);
+        }
+        List<HouseTile> tiles = new ArrayList<HouseTile>();
+        JSONArray customTiles = jsonObject.getJSONArray("customTiles");
+        for (int i = 0; i < customTiles.length(); i++) {
+            JSONObject row = customTiles.getJSONObject(i);
+            HouseTile customTile = new HouseTile(row);
+            tiles.add(customTile);
+        }
+        String type = jsonObject.getString("type");
+        return new House(type, level, houseFurnitures, houseStorage, tiles, papayaUserId);
+    }
 }

@@ -25,11 +25,13 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 import com.twoclams.hww.server.model.DailyBonus.Reward;
+import com.twoclams.hww.server.model.House;
 import com.twoclams.hww.server.model.Housewife;
 import com.twoclams.hww.server.model.Husband;
 import com.twoclams.hww.server.model.OtherPlayerProfileResponse;
 import com.twoclams.hww.server.model.SimpleResponse;
 import com.twoclams.hww.server.model.SynchronizeResponse;
+import com.twoclams.hww.server.model.Wallet;
 import com.twoclams.hww.server.service.UsersService;
 import com.twoclams.hww.server.utils.DateUtils;
 
@@ -60,6 +62,7 @@ public class HousewifeWarsController extends BaseController {
             @RequestParam(value = "house") String houseJsonStr, HttpServletRequest request) throws IOException {
         Husband husband = null;
         Housewife housewife = null;
+        House house;
         try {
             husband = this.buildHusband(new JSONObject(husbandJsonStr));
         } catch (JSONException e) {
@@ -72,6 +75,21 @@ public class HousewifeWarsController extends BaseController {
             logger.info("WifeBuilt: " + housewife.toString());
         } catch (JSONException e) {
             logger.error("An error ocurred while processing wife json: " + wifeJsonStr, e);
+        }
+
+        try {
+            house = this.buildHouse(new JSONObject(houseJsonStr));
+            userService.synchronizeHouse(house.getPapayaUserId(), house);
+        } catch (JSONException e) {
+            logger.error("An error ocurred while processing house json: " + houseJsonStr, e);
+        }
+
+        try {
+            JSONObject jsonWallet = new JSONObject(walletJsonStr);
+            Wallet wallet = new Wallet(jsonWallet);
+            userService.synchronizeWallet(wallet);
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
         SimpleResponse response = userService.registeUser(housewife, husband);
         return this.getDefaultSerializer().deepSerialize(response);
