@@ -123,22 +123,34 @@ public class BaseController {
         List<HouseFurniture> houseFurnitures = new ArrayList<HouseFurniture>();
         for (int i = 0; i < furnitures.length(); i++) {
             JSONObject row = furnitures.getJSONObject(i);
-            HouseFurniture furniture = new HouseFurniture(row);
-            houseFurnitures.add(furniture);
+            try {
+                HouseFurniture furniture = new HouseFurniture(row);
+                houseFurnitures.add(furniture);
+            } catch (JSONException e) {
+                logger.error("Error adding furniture. ", e);
+            }
         }
         JSONArray storage = jsonObject.getJSONArray("storage");
         List<HouseFurniture> houseStorage = new ArrayList<HouseFurniture>();
         for (int i = 0; i < storage.length(); i++) {
             JSONObject row = storage.getJSONObject(i);
-            HouseFurniture furniture = new HouseFurniture(row);
-            houseStorage.add(furniture);
+            try {
+                HouseFurniture furniture = new HouseFurniture(row);
+                houseStorage.add(furniture);
+            } catch (JSONException e) {
+                logger.error("Error adding storage. ", e);
+            }
         }
         List<HouseTile> tiles = new ArrayList<HouseTile>();
         JSONArray customTiles = jsonObject.getJSONArray("customTiles");
         for (int i = 0; i < customTiles.length(); i++) {
             JSONObject row = customTiles.getJSONObject(i);
-            HouseTile customTile = new HouseTile(row);
-            tiles.add(customTile);
+            try {
+                HouseTile customTile = new HouseTile(row);
+                tiles.add(customTile);
+            } catch (JSONException e) {
+                logger.error("Error adding custom tiles. ", e);
+            }
         }
         String type = jsonObject.getString("type");
         return new House(type, level, houseFurnitures, houseStorage, tiles, papayaUserId);
