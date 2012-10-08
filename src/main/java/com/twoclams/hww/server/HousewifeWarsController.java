@@ -78,7 +78,7 @@ public class HousewifeWarsController extends BaseController {
         }
 
         try {
-            houseJsonStr.replace("{row:,col:,height:,type:custom-floor,id:NoneNone,furnitureId:175},", "");
+            houseJsonStr = houseJsonStr.replace("{row:,col:,height:,type:custom-floor,id:NoneNone,furnitureId:175},", "");
             house = this.buildHouse(new JSONObject(houseJsonStr));
             userService.synchronizeHouse(house.getPapayaUserId(), house);
         } catch (JSONException e) {
