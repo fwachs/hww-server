@@ -7,11 +7,14 @@ public class SynchronizeResponse implements Serializable {
 	private Housewife wife;
 	private Husband husband;
 	private House house;
+	private Wallet wallet;
 
-	public SynchronizeResponse(Housewife wife, Husband husband, House house) {
+	public SynchronizeResponse(Housewife wife, Husband husband, House house, Wallet wallet) {
 		this.wife = wife;
 		this.husband = husband;
 		this.house = house;
+		this.wallet = wallet;
+		husband.update();
 	}
 
 	public Housewife getWife() {
@@ -26,4 +29,7 @@ public class SynchronizeResponse implements Serializable {
 		return house;
 	}
 
+	public Wallet getWallet() {
+        return wallet;
+    }
 }

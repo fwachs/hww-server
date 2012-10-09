@@ -41,14 +41,39 @@ public class BaseController {
     }
 
     protected Husband buildHusband(JSONObject husbandJson) throws JSONException {
-        String id = new String(husbandJson.get("papayaUserId").toString());
-        Integer occupation = (Integer) husbandJson.get("occupation");
-        Object name = husbandJson.get("name");
-        Integer careerLevel = (Integer) husbandJson.get("careerLevel");
-        Integer stressLevel = (Integer) husbandJson.get("stressMeterValue");
-        Integer loveTank = (Integer) husbandJson.get("loveTankValue");
-        Integer totalVisits = (Integer) husbandJson.get("citiesVisited");
-        return new Husband(id, occupation, String.valueOf(name), careerLevel, stressLevel, loveTank, totalVisits);
+        Integer salaryFactor = husbandJson.getInt("salaryFactor");
+        Integer rareItemThreshold = husbandJson.getInt("rareItemThreshold");
+        Integer goOnADateCost = husbandJson.getInt("goOnADateCost");
+        Integer shoppingDreadValue = husbandJson.getInt("shoppingDreadValue");
+        Integer workSSPReturn = husbandJson.getInt("workSSPReturn");
+        Integer shoppingCounts = husbandJson.getInt("shoppingCounts");
+        Integer workStressorValue = husbandJson.getInt("workStressorValue");
+        Integer watchTheGameCost = husbandJson.getInt("watchTheGameCost");
+        Integer outWorking = husbandJson.getInt("outWorking");
+        String name = husbandJson.getString("name");
+        Integer careerLevel = husbandJson.getInt("careerLevel");
+        Integer totalVisits = husbandJson.getInt("totalVisits");
+        Integer salary = husbandJson.getInt("salary");
+        Integer workBuffTime = husbandJson.getInt("workBuffTime");
+        Integer stressMeterValue = husbandJson.getInt("stressMeterValue");
+        Integer loveCooldown = husbandJson.getInt("loveCooldown");
+        Integer playVideoGameCost = husbandJson.getInt("playVideoGameCost");
+        Integer workHours = husbandJson.getInt("workHours");
+        Integer kissCost = husbandJson.getInt("kissCost");
+        String papayaUserId = husbandJson.getString("papayaUserId");
+        Integer citiesVisited = husbandJson.getInt("citiesVisited");
+        Integer requiredVisits = husbandJson.getInt("requiredVisits");
+        Integer localVisits = husbandJson.getInt("localVisits");
+        Integer outShopping = husbandJson.getInt("outShopping");
+        Integer stressCooldown = husbandJson.getInt("stressCooldown");
+        Integer loveTankValue = husbandJson.getInt("loveTankValue");
+        Integer occupation = husbandJson.getInt("occupation");
+
+        return new Husband(salaryFactor, rareItemThreshold, goOnADateCost, shoppingDreadValue, workSSPReturn,
+                shoppingCounts, workStressorValue, watchTheGameCost, outWorking, name, careerLevel, totalVisits,
+                salary, workBuffTime, stressMeterValue, loveCooldown, playVideoGameCost, workHours, kissCost,
+                papayaUserId, citiesVisited, localVisits, requiredVisits, outShopping, stressCooldown, loveTankValue,
+                occupation);
     }
 
     protected Housewife buildWife(JSONObject wifeJson) throws JSONException {

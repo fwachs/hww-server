@@ -46,7 +46,7 @@ public class UsersServiceImpl implements UsersService {
 		}
 		if (husband != null) {
 			logger.info("Saving husband: " + husband.toString());
-			husbandDao.store(getHusbandKey(husband.getId()), husband, -1);
+			husbandDao.store(getHusbandKey(husband.getPapayaUserId()), husband, -1);
 		}
 		return getOKResponse();
 	}
@@ -59,7 +59,7 @@ public class UsersServiceImpl implements UsersService {
 
 	@Override
 	public SimpleResponse synchronizeHusband(Husband husband) {
-		husbandDao.store(getHusbandKey(husband.getId()), husband, -1);
+		husbandDao.store(getHusbandKey(husband.getPapayaUserId()), husband, -1);
 		return getOKResponse();
 	}
 
@@ -85,7 +85,7 @@ public class UsersServiceImpl implements UsersService {
 		OtherPlayerProfileResponse response = new OtherPlayerProfileResponse();
 		Husband husband = findHusband(papayaUserId);
 		if (husband == null) {
-			husband = new Husband(papayaUserId, 0, "MysteriousHusband", 7, 4, 3, 5);
+			husband = new Husband();
 		}
 		response.setHusband(husband);
 		Housewife wife = findHousewife(papayaUserId);
@@ -94,7 +94,6 @@ public class UsersServiceImpl implements UsersService {
 					new Integer[] { 85, 79, 66 }, 2, 3);
 		}
 		response.setWife(wife);
-//		 House house = (House) wifeDao.get("house-" + papayaUserId);
 		response.setHouseLevel(3);
 		return response;
 	}
@@ -199,19 +198,20 @@ public class UsersServiceImpl implements UsersService {
 		}
 		Housewife wife = this.getWife(papayaUserId);
 		Husband husband = this.getHusband(papayaUserId);
+		Wallet wallet = (Wallet) wifeDao.get(this.getWalletKey(papayaUserId));
 		SynchronizeResponse response = new SynchronizeResponse(wife, husband,
-				house);
+				house, wallet);
 		return response;
 	}
 
     @Override
     public SimpleResponse synchronizeWallet(Wallet wallet) {
-        wifeDao.store(getWalletKey(wallet), wallet, -1);
+        wifeDao.store(getWalletKey(wallet.getPapayaUserId()), wallet, -1);
         return new SimpleResponse();
     }
 
-    private String getWalletKey(Wallet wallet) {
-        return wallet.getPapayaUserId() + "-wallet";
+    private String getWalletKey(String papayaUserId) {
+        return papayaUserId + "-wallet";
     }
 
 }

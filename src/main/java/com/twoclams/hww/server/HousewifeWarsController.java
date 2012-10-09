@@ -70,15 +70,14 @@ public class HousewifeWarsController extends BaseController {
         }
 
         try {
-            logger.info("WifeJson: " + wifeJsonStr);
             housewife = this.buildWife(new JSONObject(wifeJsonStr));
-            logger.info("WifeBuilt: " + housewife.toString());
         } catch (JSONException e) {
             logger.error("An error ocurred while processing wife json: " + wifeJsonStr, e);
         }
 
         try {
-            houseJsonStr = houseJsonStr.replace("{row:,col:,height:,type:custom-floor,id:NoneNone,furnitureId:175},", "");
+            houseJsonStr = houseJsonStr.replace("{row:,col:,height:,type:custom-floor,id:NoneNone,furnitureId:175},",
+                    "");
             house = this.buildHouse(new JSONObject(houseJsonStr));
             userService.synchronizeHouse(house.getPapayaUserId(), house);
         } catch (JSONException e) {
@@ -90,7 +89,7 @@ public class HousewifeWarsController extends BaseController {
             Wallet wallet = new Wallet(jsonWallet);
             userService.synchronizeWallet(wallet);
         } catch (JSONException e) {
-            e.printStackTrace();
+            logger.error("An error ocurred while processing wallet json: " + walletJsonStr, e);
         }
         SimpleResponse response = userService.registeUser(housewife, husband);
         return this.getDefaultSerializer().deepSerialize(response);
@@ -127,9 +126,7 @@ public class HousewifeWarsController extends BaseController {
         }
 
         try {
-            logger.info("WifeJson: " + wifeJsonStr);
             housewife = this.buildWife(new JSONObject(wifeJsonStr));
-            logger.info("WifeBuilt: " + housewife.toString());
         } catch (JSONException e) {
             logger.error("An error ocurred while processing wife json: " + wifeJsonStr, e);
         }
