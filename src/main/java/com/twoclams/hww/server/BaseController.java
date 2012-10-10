@@ -77,21 +77,26 @@ public class BaseController {
     }
 
     protected Housewife buildWife(JSONObject wifeJson) throws JSONException {
-        String id = new String(wifeJson.get("id").toString());
-        Object wifeName = wifeJson.get("name");
+        String id = wifeJson.getString("id");
+        String wifeName = wifeJson.getString("name");
         if (wifeName == null) {
             wifeName = "MysteryWife";
         }
-        Integer socialStatusPoints = (Integer) wifeJson.get("socialStatusPoints");
-        Housewife.Type type = Housewife.Type.valueOf((String) wifeJson.get("type"));
-        JSONArray jsonSkinTone = (JSONArray) wifeJson.get("skinTone");
+        Integer socialStatusPoints = wifeJson.getInt("socialStatusPoints");
+        Housewife.Type type = Housewife.Type.valueOf(wifeJson.getString("type"));
+        JSONArray jsonSkinTone = wifeJson.getJSONArray("skinTone");
         Integer[] skinTone = new Integer[3];
         for (int i = 0; i < jsonSkinTone.length(); i++) {
-            skinTone[i] = (Integer) jsonSkinTone.get(i);
+            skinTone[i] = jsonSkinTone.getInt(i);
         }
-        Integer hairColor = (Integer) wifeJson.get("hairColor");
-        Integer hairStyle = (Integer) wifeJson.get("hairStyle");
-        return new Housewife(id, wifeName.toString(), socialStatusPoints, type, skinTone, hairColor, hairStyle);
+        JSONArray jsonMysteryItems = wifeJson.getJSONArray("mysteryItems");
+        Integer[] mysteryItems = new Integer[jsonMysteryItems.length()];
+        for (int i = 0; i < jsonMysteryItems.length(); i++) {
+            mysteryItems[i] = jsonMysteryItems.getInt(i);
+        }
+        Integer hairColor = wifeJson.getInt("hairColor");
+        Integer hairStyle = wifeJson.getInt("hairStyle");
+        return new Housewife(id, wifeName, socialStatusPoints, type, skinTone, hairColor, hairStyle, mysteryItems);
     }
 
     protected House buildHouse(String type, String level, String furnituresJsonStr, String storageJsonStr,
