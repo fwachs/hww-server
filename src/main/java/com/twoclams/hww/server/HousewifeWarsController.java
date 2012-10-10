@@ -29,6 +29,7 @@ import com.twoclams.hww.server.model.House;
 import com.twoclams.hww.server.model.Housewife;
 import com.twoclams.hww.server.model.Husband;
 import com.twoclams.hww.server.model.OtherPlayerProfileResponse;
+import com.twoclams.hww.server.model.Passport;
 import com.twoclams.hww.server.model.SimpleResponse;
 import com.twoclams.hww.server.model.SynchronizeResponse;
 import com.twoclams.hww.server.model.Wallet;
@@ -63,6 +64,7 @@ public class HousewifeWarsController extends BaseController {
         Husband husband = null;
         Housewife housewife = null;
         House house;
+        Passport passport;
         try {
             husband = this.buildHusband(new JSONObject(husbandJsonStr));
         } catch (JSONException e) {
@@ -80,6 +82,13 @@ public class HousewifeWarsController extends BaseController {
                     "");
             house = this.buildHouse(new JSONObject(houseJsonStr));
             userService.synchronizeHouse(house.getPapayaUserId(), house);
+        } catch (JSONException e) {
+            logger.error("An error ocurred while processing house json: " + houseJsonStr, e);
+        }
+
+        try {
+            passport = this.buildPassport(new JSONObject(passportJsonStr));
+            userService.synchronizePassport(passport.getPapayaUserId(), passport);
         } catch (JSONException e) {
             logger.error("An error ocurred while processing house json: " + houseJsonStr, e);
         }

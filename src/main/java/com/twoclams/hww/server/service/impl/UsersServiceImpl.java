@@ -16,6 +16,7 @@ import com.twoclams.hww.server.model.House;
 import com.twoclams.hww.server.model.Housewife;
 import com.twoclams.hww.server.model.Husband;
 import com.twoclams.hww.server.model.OtherPlayerProfileResponse;
+import com.twoclams.hww.server.model.Passport;
 import com.twoclams.hww.server.model.SimpleResponse;
 import com.twoclams.hww.server.model.SynchronizeResponse;
 import com.twoclams.hww.server.model.Wallet;
@@ -198,7 +199,8 @@ public class UsersServiceImpl implements UsersService {
         Housewife wife = this.getWife(papayaUserId);
         Husband husband = this.getHusband(papayaUserId);
         Wallet wallet = (Wallet) wifeDao.get(this.getWalletKey(papayaUserId));
-        SynchronizeResponse response = new SynchronizeResponse(wife, husband, house, wallet);
+        Passport passport = (Passport) wifeDao.get(this.getPassportKey(papayaUserId));
+        SynchronizeResponse response = new SynchronizeResponse(wife, husband, house, wallet, passport);
         return response;
     }
 
@@ -210,6 +212,16 @@ public class UsersServiceImpl implements UsersService {
 
     private String getWalletKey(String papayaUserId) {
         return papayaUserId + "-wallet";
+    }
+
+    @Override
+    public SimpleResponse synchronizePassport(String papayaUserId, Passport passport) {
+        wifeDao.store(getPassportKey(papayaUserId), passport);
+        return new SimpleResponse();
+    }
+
+    private String getPassportKey(String papayaUserId) {
+        return papayaUserId + "-passport";
     }
 
 }

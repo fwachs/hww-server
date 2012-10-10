@@ -17,6 +17,7 @@ import com.twoclams.hww.server.model.HouseFurniture;
 import com.twoclams.hww.server.model.HouseTile;
 import com.twoclams.hww.server.model.Housewife;
 import com.twoclams.hww.server.model.Husband;
+import com.twoclams.hww.server.model.Passport;
 
 import flexjson.JSONSerializer;
 
@@ -184,5 +185,52 @@ public class BaseController {
         }
         String type = jsonObject.getString("type");
         return new House(type, level, houseFurnitures, houseStorage, tiles, papayaUserId);
+    }
+
+    public Passport buildPassport(JSONObject jsonPassport) throws JSONException {
+        String papayaUserId = jsonPassport.getString("id");
+        JSONArray buenosAiresSouvenirsJson = jsonPassport.getJSONArray("BuenosAiresSouvenirs");
+        JSONArray tokyoSouvenirsJson = jsonPassport.getJSONArray("TokyoSouvenirs");
+        JSONArray sydneySouvenirsJson = jsonPassport.getJSONArray("SydneySouvenirs");
+        JSONArray londonSouvenirsJson = jsonPassport.getJSONArray("LondonSouvenirs");
+        JSONArray parisSouvenirsJson = jsonPassport.getJSONArray("ParisSouvenirs");
+        JSONArray sanFranciscoSouvenirsJson = jsonPassport.getJSONArray("SanFranciscoSouvenirs");
+        JSONArray datesCompleted = jsonPassport.getJSONArray("datesCompleted");
+
+        Integer tokyoFirstVisit = jsonPassport.getInt("TokyoFirstVisit");
+        Integer parisFirstVisit = jsonPassport.getInt("ParisFirstVisit");
+        Integer londonFirstVisit = jsonPassport.getInt("londonFirstVisit");
+        Integer sanFranciscoFirstVisit = jsonPassport.getInt("SanFranciscoFirstVisit");
+        Integer sydneyFirstVisit = jsonPassport.getInt("SydneyFirstVisit");
+        Integer buenosAiresFirstVisit = jsonPassport.getInt("BuenosAiresFirstVisit");
+        Integer citiesVisited = jsonPassport.getInt("citiesVisited");
+        Passport passport = new Passport(papayaUserId, toIntegerArray(buenosAiresSouvenirsJson),
+                toIntegerArray(tokyoSouvenirsJson), toIntegerArray(sydneySouvenirsJson),
+                toIntegerArray(londonSouvenirsJson), toIntegerArray(parisSouvenirsJson),
+                toIntegerArray(sanFranciscoSouvenirsJson), toStringArray(datesCompleted), tokyoFirstVisit,
+                parisFirstVisit, londonFirstVisit, sanFranciscoFirstVisit, sydneyFirstVisit, buenosAiresFirstVisit,
+                citiesVisited);
+        return passport;
+    }
+
+    private static Integer[] toIntegerArray(JSONArray array) throws JSONException {
+        List<Integer> integers = new ArrayList<Integer>();
+        for (int i = 0; i < array.length(); i++) {
+            integers.add(array.getInt(i));
+        }
+        return integers.toArray(new Integer[] {});
+    }
+
+    private static String[] toStringArray(JSONArray array) throws JSONException {
+        List<String> strings = new ArrayList<String>();
+        for (int i = 0; i < array.length(); i++) {
+            Object obj = array.opt(i);
+            if (obj != null) {
+                strings.add(obj.toString());
+            } else {
+                strings.add(null);
+            }
+        }
+        return strings.toArray(new String[] {});
     }
 }
