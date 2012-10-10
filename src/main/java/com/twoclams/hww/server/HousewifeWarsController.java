@@ -90,7 +90,7 @@ public class HousewifeWarsController extends BaseController {
             passport = this.buildPassport(new JSONObject(passportJsonStr));
             userService.synchronizePassport(passport.getPapayaUserId(), passport);
         } catch (JSONException e) {
-            logger.error("An error ocurred while processing house json: " + houseJsonStr, e);
+            logger.error("An error ocurred while processing passport json: " + passportJsonStr, e);
         }
 
         try {
