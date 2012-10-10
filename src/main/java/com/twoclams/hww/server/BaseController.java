@@ -90,10 +90,13 @@ public class BaseController {
         for (int i = 0; i < jsonSkinTone.length(); i++) {
             skinTone[i] = jsonSkinTone.getInt(i);
         }
-        JSONArray jsonMysteryItems = wifeJson.getJSONArray("mysteryItems");
-        Integer[] mysteryItems = new Integer[jsonMysteryItems.length()];
-        for (int i = 0; i < jsonMysteryItems.length(); i++) {
-            mysteryItems[i] = jsonMysteryItems.getInt(i);
+        Integer[] mysteryItems = new Integer[]{};
+        if (wifeJson.opt("mysteryItems") != null) {
+            JSONArray jsonMysteryItems = wifeJson.getJSONArray("mysteryItems");
+            mysteryItems = new Integer[jsonMysteryItems.length()];
+            for (int i = 0; i < jsonMysteryItems.length(); i++) {
+                mysteryItems[i] = jsonMysteryItems.getInt(i);
+            }
         }
         Integer hairColor = wifeJson.getInt("hairColor");
         Integer hairStyle = wifeJson.getInt("hairStyle");
