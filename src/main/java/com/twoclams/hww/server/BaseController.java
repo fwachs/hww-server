@@ -103,7 +103,7 @@ public class BaseController {
         return new Housewife(id, wifeName, socialStatusPoints, type, skinTone, hairColor, hairStyle, mysteryItems);
     }
 
-    protected House buildHouse(String type, String level, String furnituresJsonStr, String storageJsonStr,
+    protected House buildHouse(String type, String level, Integer itemId, String furnituresJsonStr, String storageJsonStr,
             String customTilesJsonStr) {
         String[] customTiles = customTilesJsonStr.replace("[", "").replace("]", "").split("},");
         List<HouseTile> tiles = new ArrayList<HouseTile>();
@@ -147,7 +147,7 @@ public class BaseController {
                 logger.error("HouseStorage - " + storageItem, e);
             }
         }
-        return new House(type, Integer.valueOf(level), houseFurnitures, houseStorage, tiles);
+        return new House(type, Integer.valueOf(level), houseFurnitures, houseStorage, tiles, itemId);
     }
 
     protected House buildHouse(JSONObject jsonObject) throws JSONException {
@@ -187,7 +187,11 @@ public class BaseController {
             }
         }
         String type = jsonObject.getString("type");
-        return new House(type, level, houseFurnitures, houseStorage, tiles, papayaUserId);
+        Integer itemId = jsonObject.optInt("itemId");
+        if (itemId == null) {
+            itemId = new Integer(1000);
+        }
+        return new House(type, level, houseFurnitures, houseStorage, tiles, papayaUserId, itemId);
     }
 
     public Passport buildPassport(JSONObject jsonPassport) throws JSONException {
@@ -198,7 +202,7 @@ public class BaseController {
         JSONArray londonSouvenirsJson = jsonPassport.getJSONArray("LondonSouvenirs");
         JSONArray parisSouvenirsJson = jsonPassport.getJSONArray("ParisSouvenirs");
         JSONArray sanFranciscoSouvenirsJson = jsonPassport.getJSONArray("SanFranciscoSouvenirs");
-        JSONArray datesCompleted = jsonPassport.getJSONArray("datesCompleted");
+        JSONArray datesCompleted = jsonPassport.getJSONArray("escapedDatesCompleted");
 
         Integer tokyoFirstVisit = jsonPassport.getInt("TokyoFirstVisit");
         Integer parisFirstVisit = jsonPassport.getInt("ParisFirstVisit");

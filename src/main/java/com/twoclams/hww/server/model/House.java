@@ -13,6 +13,7 @@ public class House implements Serializable {
     private List<HouseFurniture> furnitures;
     private List<HouseFurniture> storage;
     private List<HouseTile> customTiles;
+    private Integer itemId;
     private volatile boolean isEmpty;
 
     public House() {
@@ -22,20 +23,22 @@ public class House implements Serializable {
         type = "brick-yellow";
         level = 1;
         isEmpty = true;
+        itemId = 1;
     }
 
     public House(String type, Integer level, List<HouseFurniture> houseFurnitures,
-            List<HouseFurniture> houseStorage, List<HouseTile> tiles) {
+            List<HouseFurniture> houseStorage, List<HouseTile> tiles, Integer itemId) {
         this.type = type;
         this.level = level;
         this.furnitures = houseFurnitures;
         this.storage = houseStorage;
         this.customTiles = tiles;
+        this.itemId = itemId;
     }
 
     public House(String type, Integer level, List<HouseFurniture> houseFurnitures, List<HouseFurniture> houseStorage,
-            List<HouseTile> tiles, String papayaUserId) {
-        this(type, level, houseFurnitures, houseStorage, tiles);
+            List<HouseTile> tiles, String papayaUserId, Integer itemId) {
+        this(type, level, houseFurnitures, houseStorage, tiles, itemId);
         this.papayaUserId = papayaUserId;
     }
 
@@ -69,6 +72,10 @@ public class House implements Serializable {
 
     public void setPapayaUserId(String papayaUserId) {
         this.papayaUserId = papayaUserId;
+    }
+
+    public Integer getItemId() {
+        return itemId;
     }
 
     @Override

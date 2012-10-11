@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.json.JSONException;
@@ -29,16 +30,22 @@ public class HouseController extends BaseController {
     @RequestMapping(value = "/syncHouse")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
-    public String syncHouse(@RequestParam(value = "type") String type,
+    public String syncHouse(
+            @RequestParam(value = "type") String type,
             @RequestParam(value = "level") String level,
             @RequestParam(value = "furnitures") String furnituresJsonStr,
             @RequestParam(value = "storage") String storageJsonStr,
             @RequestParam(value = "customTiles") String customTilesJsonStr,
             @RequestParam(value = "papayaUserId") String papayaUserId, HttpServletRequest request)
             throws IOException {
+        String itemIdStr = request.getParameter("itemId");
+        Integer itemId = new Integer(1000);
+        if (StringUtils.isNotBlank(itemIdStr) && StringUtils.isNumeric(itemIdStr)) {
+            itemId = Integer.valueOf(itemIdStr);
+        }
         logger.info("House Synchronization for" + " papayaUserId: " + papayaUserId + " - Furniture: " + furnituresJsonStr + ", Storage: "
                 + storageJsonStr + " CustomTiles: " + customTilesJsonStr);
-        House house = this.buildHouse(type, level, furnituresJsonStr, storageJsonStr,
+        House house = this.buildHouse(type, level, itemId, furnituresJsonStr, storageJsonStr,
                 customTilesJsonStr);
 
         SimpleResponse response = userService.synchronizeHouse(papayaUserId, house);

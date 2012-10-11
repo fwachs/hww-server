@@ -56,7 +56,9 @@ public class HousewifeWarsController extends BaseController {
     @RequestMapping(value = "/synchronizeGame")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
-    public String synchronizeGame(@RequestParam(value = "wife") String wifeJsonStr,
+    public String synchronizeGame(
+            @RequestParam(value = "papayaUserId") String papayaUserId,
+            @RequestParam(value = "wife") String wifeJsonStr,
             @RequestParam(value = "husband") String husbandJsonStr,
             @RequestParam(value = "wallet") String walletJsonStr,
             @RequestParam(value = "passport") String passportJsonStr,
@@ -88,7 +90,7 @@ public class HousewifeWarsController extends BaseController {
 
         try {
             passport = this.buildPassport(new JSONObject(passportJsonStr));
-            userService.synchronizePassport(passport.getPapayaUserId(), passport);
+            userService.synchronizePassport(papayaUserId, passport);
         } catch (JSONException e) {
             logger.error("An error ocurred while processing passport json: " + passportJsonStr, e);
         }
