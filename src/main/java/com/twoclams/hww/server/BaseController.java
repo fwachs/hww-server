@@ -202,7 +202,7 @@ public class BaseController {
         JSONArray londonSouvenirsJson = jsonPassport.getJSONArray("LondonSouvenirs");
         JSONArray parisSouvenirsJson = jsonPassport.getJSONArray("ParisSouvenirs");
         JSONArray sanFranciscoSouvenirsJson = jsonPassport.getJSONArray("SanFranciscoSouvenirs");
-        JSONArray datesCompleted = jsonPassport.getJSONArray("escapedDatesCompleted");
+        JSONArray datesCompleted = jsonPassport.optJSONArray("escapedDatesCompleted");
 
         Integer tokyoFirstVisit = jsonPassport.getInt("TokyoFirstVisit");
         Integer parisFirstVisit = jsonPassport.getInt("ParisFirstVisit");
@@ -229,6 +229,9 @@ public class BaseController {
     }
 
     private static String[] toStringArray(JSONArray array) throws JSONException {
+        if (array == null) {
+            return new String[] {};
+        }
         List<String> strings = new ArrayList<String>();
         for (int i = 0; i < array.length(); i++) {
             Object obj = array.opt(i);
