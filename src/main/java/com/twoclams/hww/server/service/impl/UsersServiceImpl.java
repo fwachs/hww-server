@@ -216,8 +216,8 @@ public class UsersServiceImpl implements UsersService {
 
     @Override
     public SimpleResponse synchronizePassport(String papayaUserId, Passport passport) {
-        logger.info("Saving passport: " + papayaUserId);
-        wifeDao.store(getPassportKey(papayaUserId), passport);
+        logger.info("Saving passport: " + papayaUserId + passport);
+        wifeDao.store(getPassportKey(papayaUserId), passport, -1);
         return new SimpleResponse();
     }
 
