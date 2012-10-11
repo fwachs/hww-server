@@ -188,7 +188,7 @@ public class BaseController {
         }
         String type = jsonObject.getString("type");
         Integer itemId = jsonObject.optInt("itemId");
-        if (itemId == null) {
+        if (itemId == null || itemId == 0) {
             itemId = new Integer(1000);
         }
         return new House(type, level, houseFurnitures, houseStorage, tiles, papayaUserId, itemId);
