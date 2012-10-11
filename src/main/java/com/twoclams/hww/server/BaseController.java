@@ -1,6 +1,7 @@
 package com.twoclams.hww.server;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -155,10 +156,12 @@ public class BaseController {
         String papayaUserId = jsonObject.getString("papayaUserId");
         JSONArray furnitures = jsonObject.getJSONArray("furnitures");
         List<HouseFurniture> houseFurnitures = new ArrayList<HouseFurniture>();
+        List<Integer> itemIds = new ArrayList<Integer>();
         for (int i = 0; i < furnitures.length(); i++) {
             JSONObject row = furnitures.getJSONObject(i);
             try {
                 HouseFurniture furniture = new HouseFurniture(row);
+                itemIds.add(furniture.getItemId());
                 houseFurnitures.add(furniture);
             } catch (JSONException e) {
                 logger.error("Error adding furniture. ", e);
@@ -170,6 +173,7 @@ public class BaseController {
             JSONObject row = storage.getJSONObject(i);
             try {
                 HouseFurniture furniture = new HouseFurniture(row);
+                itemIds.add(furniture.getItemId());
                 houseStorage.add(furniture);
             } catch (JSONException e) {
                 logger.error("Error adding storage. ", e);
@@ -187,9 +191,10 @@ public class BaseController {
             }
         }
         String type = jsonObject.getString("type");
-        Integer itemId = jsonObject.optInt("itemId");
-        if (itemId == null || itemId == 0) {
-            itemId = new Integer(1000);
+        Collections.sort(itemIds);
+        Integer itemId = 1;
+        if (!itemIds.isEmpty()) {
+            itemId = itemIds.get(itemIds.size()-1);
         }
         return new House(type, level, houseFurnitures, houseStorage, tiles, papayaUserId, itemId);
     }
