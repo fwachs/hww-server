@@ -196,7 +196,7 @@ public class BaseController {
         if (!itemIds.isEmpty()) {
             itemId = itemIds.get(itemIds.size()-1);
         }
-        return new House(type, level, houseFurnitures, houseStorage, tiles, papayaUserId, itemId);
+        return new House(type, level, houseFurnitures, houseStorage, tiles, papayaUserId, itemId + 1);
     }
 
     public Passport buildPassport(JSONObject jsonPassport) throws JSONException {
