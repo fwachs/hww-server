@@ -2,6 +2,7 @@ package com.twoclams.hww.server.model;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class House implements Serializable {
@@ -82,6 +83,24 @@ public class House implements Serializable {
     public String toString() {
         return "House [type=" + type + ", level=" + level + ", furnitures=" + furnitures
                 + ", storage=" + storage + ", customTiles=" + customTiles + "]";
+    }
+
+    public void updateItemId() {
+        List<Integer> itemIds = new ArrayList<Integer>();
+        for (HouseFurniture furniture : this.furnitures) {
+            itemIds.add(furniture.getItemId());
+        }
+
+        for (HouseFurniture storage : this.storage) {
+            itemIds.add(storage.getItemId());
+        }
+
+        Collections.sort(itemIds);
+        Integer itemId = 1;
+        if (!itemIds.isEmpty()) {
+            itemId = itemIds.get(itemIds.size()-1) + 1;
+        }
+        this.itemId = itemId;
     }
 
 }

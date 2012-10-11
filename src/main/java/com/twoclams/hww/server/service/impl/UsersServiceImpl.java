@@ -195,6 +195,8 @@ public class UsersServiceImpl implements UsersService {
         House house = this.getHouse(papayaUserId);
         if (house.isEmpty()) {
             house = null;
+        } else {
+            house.updateItemId();
         }
         Housewife wife = this.getWife(papayaUserId);
         Husband husband = this.getHusband(papayaUserId);
