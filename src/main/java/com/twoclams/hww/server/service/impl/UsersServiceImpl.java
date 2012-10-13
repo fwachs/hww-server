@@ -17,6 +17,7 @@ import com.twoclams.hww.server.model.Housewife;
 import com.twoclams.hww.server.model.Husband;
 import com.twoclams.hww.server.model.OtherPlayerProfileResponse;
 import com.twoclams.hww.server.model.Passport;
+import com.twoclams.hww.server.model.Realstate;
 import com.twoclams.hww.server.model.SimpleResponse;
 import com.twoclams.hww.server.model.SynchronizeResponse;
 import com.twoclams.hww.server.model.Wallet;
@@ -114,7 +115,7 @@ public class UsersServiceImpl implements UsersService {
         Housewife wife = findHousewife(papayaUserId);
         if (wife == null) {
             wife = new Housewife("12323", "MysteriousWife", 3000, Housewife.Type.Modern, new Integer[] { 85, 79, 66 },
-                    2, 3, new Integer[] {}  );
+                    2, 3, new Integer[] {});
         }
         return wife;
     }
@@ -202,8 +203,8 @@ public class UsersServiceImpl implements UsersService {
         Husband husband = this.getHusband(papayaUserId);
         Wallet wallet = (Wallet) wifeDao.get(this.getWalletKey(papayaUserId));
         Passport passport = (Passport) wifeDao.get(this.getPassportKey(papayaUserId));
-        SynchronizeResponse response = new SynchronizeResponse(wife, husband, house, wallet, passport);
-        return response;
+        Realstate realstate = (Realstate) wifeDao.get(this.getRealstateKey(papayaUserId));
+        return new SynchronizeResponse(wife, husband, house, wallet, passport, realstate);
     }
 
     @Override
@@ -225,6 +226,17 @@ public class UsersServiceImpl implements UsersService {
 
     private String getPassportKey(String papayaUserId) {
         return papayaUserId + "-passport";
+    }
+
+    @Override
+    public SimpleResponse synchronizeRealstate(String papayaUserId, Realstate realstate) {
+        logger.info("Saving realstate: " + papayaUserId + realstate);
+        wifeDao.store(getRealstateKey(papayaUserId), realstate, -1);
+        return new SimpleResponse();
+    }
+
+    private String getRealstateKey(String papayaUserId) {
+        return papayaUserId + "-realstate";
     }
 
 }

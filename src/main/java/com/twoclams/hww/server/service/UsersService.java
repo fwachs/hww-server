@@ -6,6 +6,7 @@ import com.twoclams.hww.server.model.Housewife;
 import com.twoclams.hww.server.model.Husband;
 import com.twoclams.hww.server.model.OtherPlayerProfileResponse;
 import com.twoclams.hww.server.model.Passport;
+import com.twoclams.hww.server.model.Realstate;
 import com.twoclams.hww.server.model.SimpleResponse;
 import com.twoclams.hww.server.model.SynchronizeResponse;
 import com.twoclams.hww.server.model.Wallet;
@@ -39,5 +40,7 @@ public interface UsersService {
     SimpleResponse synchronizeWallet(Wallet wallet);
 
     SimpleResponse synchronizePassport(String papayaUserId, Passport passport);
+
+    SimpleResponse synchronizeRealstate(String papayaUserId, Realstate realstate);
 
 }

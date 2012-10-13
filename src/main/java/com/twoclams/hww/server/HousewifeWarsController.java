@@ -9,6 +9,7 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.joda.time.DateTime;
@@ -30,6 +31,7 @@ import com.twoclams.hww.server.model.Housewife;
 import com.twoclams.hww.server.model.Husband;
 import com.twoclams.hww.server.model.OtherPlayerProfileResponse;
 import com.twoclams.hww.server.model.Passport;
+import com.twoclams.hww.server.model.Realstate;
 import com.twoclams.hww.server.model.SimpleResponse;
 import com.twoclams.hww.server.model.SynchronizeResponse;
 import com.twoclams.hww.server.model.Wallet;
@@ -56,17 +58,28 @@ public class HousewifeWarsController extends BaseController {
     @RequestMapping(value = "/synchronizeGame")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
-    public String synchronizeGame(
-            @RequestParam(value = "papayaUserId") String papayaUserId,
-            @RequestParam(value = "wife") String wifeJsonStr,
-            @RequestParam(value = "husband") String husbandJsonStr,
+    public String synchronizeGame(@RequestParam(value = "papayaUserId") String papayaUserId,
+            @RequestParam(value = "wife") String wifeJsonStr, @RequestParam(value = "husband") String husbandJsonStr,
             @RequestParam(value = "wallet") String walletJsonStr,
             @RequestParam(value = "passport") String passportJsonStr,
-            @RequestParam(value = "house") String houseJsonStr, HttpServletRequest request) throws IOException {
+            @RequestParam(value = "house") String houseJsonStr,
+            @RequestParam(value = "realstate", required = false) String realstateJsonStr, HttpServletRequest request)
+            throws IOException {
         Husband husband = null;
         Housewife housewife = null;
         House house;
+        Realstate realstate;
         Passport passport;
+
+        if (StringUtils.isNotEmpty(realstateJsonStr)) {
+            try {
+                realstate = this.buildRealstate(papayaUserId, new JSONObject(realstateJsonStr));
+                userService.synchronizeRealstate(papayaUserId, realstate);
+            } catch (JSONException e) {
+                logger.error("An error ocurred while processing realstate json: " + realstateJsonStr, e);
+            }
+        }
+
         try {
             husband = this.buildHusband(new JSONObject(husbandJsonStr));
         } catch (JSONException e) {

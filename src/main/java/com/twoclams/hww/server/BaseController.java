@@ -19,6 +19,7 @@ import com.twoclams.hww.server.model.HouseTile;
 import com.twoclams.hww.server.model.Housewife;
 import com.twoclams.hww.server.model.Husband;
 import com.twoclams.hww.server.model.Passport;
+import com.twoclams.hww.server.model.Realstate;
 
 import flexjson.JSONSerializer;
 
@@ -199,7 +200,7 @@ public class BaseController {
         return new House(type, level, houseFurnitures, houseStorage, tiles, papayaUserId, itemId + 1);
     }
 
-    public Passport buildPassport(JSONObject jsonPassport) throws JSONException {
+    protected Passport buildPassport(JSONObject jsonPassport) throws JSONException {
         String papayaUserId = jsonPassport.getString("id");
         JSONArray buenosAiresSouvenirsJson = jsonPassport.getJSONArray("BuenosAiresSouvenirs");
         JSONArray tokyoSouvenirsJson = jsonPassport.getJSONArray("TokyoSouvenirs");
@@ -225,7 +226,15 @@ public class BaseController {
         return passport;
     }
 
+    protected Realstate buildRealstate(String papayaUserId, JSONObject jsonRealstate) throws JSONException {
+        JSONArray propertyListing = jsonRealstate.optJSONArray("propertyListing");
+        return new Realstate(papayaUserId, toIntegerArray(propertyListing));
+    }
+
     private static Integer[] toIntegerArray(JSONArray array) throws JSONException {
+        if (array == null) {
+            return new Integer[] {};
+        }
         List<Integer> integers = new ArrayList<Integer>();
         for (int i = 0; i < array.length(); i++) {
             integers.add(array.getInt(i));
