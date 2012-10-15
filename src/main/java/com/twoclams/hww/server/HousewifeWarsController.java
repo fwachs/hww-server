@@ -3,8 +3,10 @@ package com.twoclams.hww.server;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -14,6 +16,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.joda.time.DateTime;
 import org.joda.time.Minutes;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,6 +47,26 @@ public class HousewifeWarsController extends BaseController {
 
     @Autowired
     private UsersService userService;
+
+    @RequestMapping(value = "/checkPlayersStatus")
+    @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
+    public String checkPlayersStatus(@RequestParam(value = "papayaUserIds") String papayaUserIdsJsonStr, HttpServletRequest request)
+            throws IOException {
+        try {
+            JSONArray papayaUserIdsJson = new JSONArray(papayaUserIdsJsonStr);
+            List<String> papayaUserIds = new ArrayList<String>();
+            for (int i = 0; i < papayaUserIdsJson.length(); i++) {
+                JSONObject obj = papayaUserIdsJson.getJSONObject(i);
+                papayaUserIds.add(obj.getString("id") + "-wife");
+            }
+            Map<String, Housewife> users = userService.checkUsers(papayaUserIds);
+            return getDefaultSerializer().deepSerialize(users);
+        } catch (JSONException e) {
+            
+        }
+        return getDefaultSerializer().deepSerialize(new SimpleResponse());
+    }
 
     @RequestMapping(value = "/synchronize")
     @ResponseStatus(HttpStatus.OK)

@@ -153,14 +153,16 @@ public class RedisCacheManager implements CacheManager {
             List<byte[]> reply = client.mget(encode(keys));
             int i = 0;
             for (byte[] value : reply) {
-                values.put(keys[i], clazz.cast(decode(value)));
-                i++;
+                if (value != null) {
+                    values.put(keys[i], clazz.cast(decode(value)));
+                    i++;
+                }
             }
         } catch(JedisConnectionException e) {
             logger.error("Error getting object with keys[" + keys + "] from redis. Attempted to" +
                     " retrieve a resource and failed.", e);
         } catch(Exception e) {
-            logger.error("Error getting bulk objects with keys[" + keys + "] from redis");
+            logger.error("Error getting bulk objects with keys[" + keys + "] from redis", e);
         } finally {
             if (client != null) {
                 this.pool.returnResource(client);

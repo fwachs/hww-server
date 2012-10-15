@@ -1,5 +1,8 @@
 package com.twoclams.hww.server.service;
 
+import java.util.List;
+import java.util.Map;
+
 import com.twoclams.hww.server.model.DailyBonus.Reward;
 import com.twoclams.hww.server.model.House;
 import com.twoclams.hww.server.model.Housewife;
@@ -42,5 +45,7 @@ public interface UsersService {
     SimpleResponse synchronizePassport(String papayaUserId, Passport passport);
 
     SimpleResponse synchronizeRealstate(String papayaUserId, Realstate realstate);
+
+    Map<String, Housewife> checkUsers(List<String> papayaUserIds);
 
 }

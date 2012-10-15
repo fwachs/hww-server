@@ -1,5 +1,8 @@
 package com.twoclams.hww.server.service.impl;
 
+import java.util.List;
+import java.util.Map;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.joda.time.DateTime;
@@ -237,6 +240,12 @@ public class UsersServiceImpl implements UsersService {
 
     private String getRealstateKey(String papayaUserId) {
         return papayaUserId + "-realstate";
+    }
+
+    @Override
+    public Map<String, Housewife> checkUsers(List<String> papayaUserIds) {
+        Map<String, Housewife> housewifePerPapayaUserId = wifeDao.get(Housewife.class, papayaUserIds.toArray(new String[]{}));
+        return housewifePerPapayaUserId;
     }
 
 }
