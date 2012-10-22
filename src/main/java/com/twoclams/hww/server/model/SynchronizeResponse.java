@@ -19,7 +19,9 @@ public class SynchronizeResponse implements Serializable {
         this.wallet = wallet;
         this.passport = passport;
         this.realstate = realstate;
-        husband.update();
+        if (husband != null) {
+            husband.update();
+        }
     }
 
     public Housewife getWife() {
