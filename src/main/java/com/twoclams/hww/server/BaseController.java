@@ -1,6 +1,7 @@
 package com.twoclams.hww.server;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -17,6 +18,8 @@ import com.twoclams.hww.server.model.HouseFurniture;
 import com.twoclams.hww.server.model.HouseTile;
 import com.twoclams.hww.server.model.Housewife;
 import com.twoclams.hww.server.model.Husband;
+import com.twoclams.hww.server.model.Passport;
+import com.twoclams.hww.server.model.Realstate;
 
 import flexjson.JSONSerializer;
 
@@ -41,34 +44,69 @@ public class BaseController {
     }
 
     protected Husband buildHusband(JSONObject husbandJson) throws JSONException {
-        String id = new String(husbandJson.get("papayaUserId").toString());
-        Integer occupation = (Integer) husbandJson.get("occupation");
-        Object name = husbandJson.get("name");
-        Integer careerLevel = (Integer) husbandJson.get("careerLevel");
-        Integer stressLevel = (Integer) husbandJson.get("stressMeterValue");
-        Integer loveTank = (Integer) husbandJson.get("loveTankValue");
-        Integer totalVisits = (Integer) husbandJson.get("citiesVisited");
-        return new Husband(id, occupation, String.valueOf(name), careerLevel, stressLevel,
-                loveTank, totalVisits);
+        Integer salaryFactor = husbandJson.getInt("salaryFactor");
+        Integer rareItemThreshold = husbandJson.getInt("rareItemThreshold");
+        Integer goOnADateCost = husbandJson.getInt("goOnADateCost");
+        Integer shoppingDreadValue = husbandJson.getInt("shoppingDreadValue");
+        Integer workSSPReturn = husbandJson.getInt("workSSPReturn");
+        Integer shoppingCounts = husbandJson.getInt("shoppingCounts");
+        Integer workStressorValue = husbandJson.getInt("workStressorValue");
+        Integer watchTheGameCost = husbandJson.getInt("watchTheGameCost");
+        Integer outWorking = husbandJson.getInt("outWorking");
+        String name = husbandJson.getString("name");
+        Integer careerLevel = husbandJson.getInt("careerLevel");
+        Integer totalVisits = husbandJson.getInt("totalVisits");
+        Integer salary = husbandJson.getInt("salary");
+        Integer workBuffTime = husbandJson.getInt("workBuffTime");
+        Integer stressMeterValue = husbandJson.getInt("stressMeterValue");
+        Integer loveCooldown = husbandJson.getInt("loveCooldown");
+        Integer playVideoGameCost = husbandJson.getInt("playVideoGameCost");
+        Integer workHours = husbandJson.getInt("workHours");
+        Integer kissCost = husbandJson.getInt("kissCost");
+        String papayaUserId = husbandJson.getString("papayaUserId");
+        Integer citiesVisited = husbandJson.getInt("citiesVisited");
+        Integer requiredVisits = husbandJson.getInt("requiredVisits");
+        Integer localVisits = husbandJson.getInt("localVisits");
+        Integer outShopping = husbandJson.getInt("outShopping");
+        Integer stressCooldown = husbandJson.getInt("stressCooldown");
+        Integer loveTankValue = husbandJson.getInt("loveTankValue");
+        Integer occupation = husbandJson.getInt("occupation");
+
+        return new Husband(salaryFactor, rareItemThreshold, goOnADateCost, shoppingDreadValue, workSSPReturn,
+                shoppingCounts, workStressorValue, watchTheGameCost, outWorking, name, careerLevel, totalVisits,
+                salary, workBuffTime, stressMeterValue, loveCooldown, playVideoGameCost, workHours, kissCost,
+                papayaUserId, citiesVisited, localVisits, requiredVisits, outShopping, stressCooldown, loveTankValue,
+                occupation);
     }
 
     protected Housewife buildWife(JSONObject wifeJson) throws JSONException {
-        String id = new String(wifeJson.get("id").toString());
-        String wifeName = (String) wifeJson.get("name");
-        Integer socialStatusPoints = (Integer) wifeJson.get("socialStatusPoints");
-        Housewife.Type type = Housewife.Type.valueOf((String) wifeJson.get("type"));
-        JSONArray jsonSkinTone = (JSONArray) wifeJson.get("skinTone");
+        String id = wifeJson.getString("id");
+        String wifeName = wifeJson.getString("name");
+        if (wifeName == null) {
+            wifeName = "MysteryWife";
+        }
+        Integer socialStatusPoints = wifeJson.getInt("socialStatusPoints");
+        Housewife.Type type = Housewife.Type.valueOf(wifeJson.getString("type"));
+        JSONArray jsonSkinTone = wifeJson.getJSONArray("skinTone");
         Integer[] skinTone = new Integer[3];
         for (int i = 0; i < jsonSkinTone.length(); i++) {
-            skinTone[i] = (Integer) jsonSkinTone.get(i);
+            skinTone[i] = jsonSkinTone.getInt(i);
         }
-        Integer hairColor = (Integer) wifeJson.get("hairColor");
-        Integer hairStyle = (Integer) wifeJson.get("hairStyle");
-        return new Housewife(id, wifeName, socialStatusPoints, type, skinTone, hairColor, hairStyle);
+        Integer[] mysteryItems = new Integer[]{};
+        if (wifeJson.opt("mysteryItems") != null) {
+            JSONArray jsonMysteryItems = wifeJson.getJSONArray("mysteryItems");
+            mysteryItems = new Integer[jsonMysteryItems.length()];
+            for (int i = 0; i < jsonMysteryItems.length(); i++) {
+                mysteryItems[i] = jsonMysteryItems.getInt(i);
+            }
+        }
+        Integer hairColor = wifeJson.getInt("hairColor");
+        Integer hairStyle = wifeJson.getInt("hairStyle");
+        return new Housewife(id, wifeName, socialStatusPoints, type, skinTone, hairColor, hairStyle, mysteryItems);
     }
 
-    protected House buildHouse(String type, String level, String furnituresJsonStr,
-            String storageJsonStr, String customTilesJsonStr) {
+    protected House buildHouse(String type, String level, Integer itemId, String furnituresJsonStr, String storageJsonStr,
+            String customTilesJsonStr) {
         String[] customTiles = customTilesJsonStr.replace("[", "").replace("]", "").split("},");
         List<HouseTile> tiles = new ArrayList<HouseTile>();
         for (String customTile : customTiles) {
@@ -111,7 +149,112 @@ public class BaseController {
                 logger.error("HouseStorage - " + storageItem, e);
             }
         }
-        return new House(type, Integer.valueOf(level), houseFurnitures, houseStorage, tiles);
+        return new House(type, Integer.valueOf(level), houseFurnitures, houseStorage, tiles, itemId);
     }
 
+    protected House buildHouse(JSONObject jsonObject) throws JSONException {
+        Integer level = jsonObject.getInt("level");
+        String papayaUserId = jsonObject.getString("papayaUserId");
+        JSONArray furnitures = jsonObject.getJSONArray("furnitures");
+        List<HouseFurniture> houseFurnitures = new ArrayList<HouseFurniture>();
+        List<Integer> itemIds = new ArrayList<Integer>();
+        for (int i = 0; i < furnitures.length(); i++) {
+            JSONObject row = furnitures.getJSONObject(i);
+            try {
+                HouseFurniture furniture = new HouseFurniture(row);
+                itemIds.add(furniture.getItemId());
+                houseFurnitures.add(furniture);
+            } catch (JSONException e) {
+                logger.error("Error adding furniture. ", e);
+            }
+        }
+        JSONArray storage = jsonObject.getJSONArray("storage");
+        List<HouseFurniture> houseStorage = new ArrayList<HouseFurniture>();
+        for (int i = 0; i < storage.length(); i++) {
+            JSONObject row = storage.getJSONObject(i);
+            try {
+                HouseFurniture furniture = new HouseFurniture(row);
+                itemIds.add(furniture.getItemId());
+                houseStorage.add(furniture);
+            } catch (JSONException e) {
+                logger.error("Error adding storage. ", e);
+            }
+        }
+        List<HouseTile> tiles = new ArrayList<HouseTile>();
+        JSONArray customTiles = jsonObject.getJSONArray("customTiles");
+        for (int i = 0; i < customTiles.length(); i++) {
+            JSONObject row = customTiles.getJSONObject(i);
+            try {
+                HouseTile customTile = new HouseTile(row);
+                tiles.add(customTile);
+            } catch (JSONException e) {
+                logger.error("Error adding custom tiles. ", e);
+            }
+        }
+        String type = jsonObject.getString("type");
+        Collections.sort(itemIds);
+        Integer itemId = 1;
+        if (!itemIds.isEmpty()) {
+            itemId = itemIds.get(itemIds.size()-1);
+        }
+        return new House(type, level, houseFurnitures, houseStorage, tiles, papayaUserId, itemId + 1);
+    }
+
+    protected Passport buildPassport(JSONObject jsonPassport) throws JSONException {
+        String papayaUserId = jsonPassport.getString("id");
+        JSONArray buenosAiresSouvenirsJson = jsonPassport.getJSONArray("BuenosAiresSouvenirs");
+        JSONArray tokyoSouvenirsJson = jsonPassport.getJSONArray("TokyoSouvenirs");
+        JSONArray sydneySouvenirsJson = jsonPassport.getJSONArray("SydneySouvenirs");
+        JSONArray londonSouvenirsJson = jsonPassport.getJSONArray("LondonSouvenirs");
+        JSONArray parisSouvenirsJson = jsonPassport.getJSONArray("ParisSouvenirs");
+        JSONArray sanFranciscoSouvenirsJson = jsonPassport.getJSONArray("SanFranciscoSouvenirs");
+        JSONArray datesCompleted = jsonPassport.optJSONArray("escapedDatesCompleted");
+
+        Integer tokyoFirstVisit = jsonPassport.getInt("TokyoFirstVisit");
+        Integer parisFirstVisit = jsonPassport.getInt("ParisFirstVisit");
+        Integer londonFirstVisit = jsonPassport.getInt("londonFirstVisit");
+        Integer sanFranciscoFirstVisit = jsonPassport.getInt("SanFranciscoFirstVisit");
+        Integer sydneyFirstVisit = jsonPassport.getInt("SydneyFirstVisit");
+        Integer buenosAiresFirstVisit = jsonPassport.getInt("BuenosAiresFirstVisit");
+        Integer citiesVisited = jsonPassport.getInt("citiesVisited");
+        Passport passport = new Passport(papayaUserId, toIntegerArray(buenosAiresSouvenirsJson),
+                toIntegerArray(tokyoSouvenirsJson), toIntegerArray(sydneySouvenirsJson),
+                toIntegerArray(londonSouvenirsJson), toIntegerArray(parisSouvenirsJson),
+                toIntegerArray(sanFranciscoSouvenirsJson), toStringArray(datesCompleted), tokyoFirstVisit,
+                parisFirstVisit, londonFirstVisit, sanFranciscoFirstVisit, sydneyFirstVisit, buenosAiresFirstVisit,
+                citiesVisited);
+        return passport;
+    }
+
+    protected Realstate buildRealstate(String papayaUserId, JSONObject jsonRealstate) throws JSONException {
+        JSONArray propertyListing = jsonRealstate.optJSONArray("propertyListing");
+        return new Realstate(papayaUserId, toIntegerArray(propertyListing));
+    }
+
+    private static Integer[] toIntegerArray(JSONArray array) throws JSONException {
+        if (array == null) {
+            return new Integer[] {};
+        }
+        List<Integer> integers = new ArrayList<Integer>();
+        for (int i = 0; i < array.length(); i++) {
+            integers.add(array.getInt(i));
+        }
+        return integers.toArray(new Integer[] {});
+    }
+
+    private static String[] toStringArray(JSONArray array) throws JSONException {
+        if (array == null) {
+            return new String[] {};
+        }
+        List<String> strings = new ArrayList<String>();
+        for (int i = 0; i < array.length(); i++) {
+            Object obj = array.opt(i);
+            if (obj != null) {
+                strings.add(obj.toString());
+            } else {
+                strings.add(null);
+            }
+        }
+        return strings.toArray(new String[] {});
+    }
 }

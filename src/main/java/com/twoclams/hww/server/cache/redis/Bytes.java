@@ -80,6 +80,9 @@ public abstract class Bytes {
      */
     @SuppressWarnings("unchecked")
     public static final <T extends Serializable> T decode(byte[] bytes) {
+        if (bytes == null) {
+            return null;
+        }
         T t = null;
         Exception thrown = null;
         try {

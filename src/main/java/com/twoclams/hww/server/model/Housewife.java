@@ -13,12 +13,13 @@ public class Housewife implements Serializable {
     private Integer[] skinTone;
     private int hairColor;
     private int hairStyle;
+    private Integer[] mysteryItems;
 
     public Housewife() {
     }
 
-    public Housewife(String papayaUserId, String name, int socialStatusPoints, Type type,
-            Integer[] skinTone, int hairColor, int hairStyle) {
+    public Housewife(String papayaUserId, String name, int socialStatusPoints, Type type, Integer[] skinTone,
+            int hairColor, int hairStyle, Integer[] mysteryItems) {
         this.id = papayaUserId;
         this.name = name;
         this.socialStatusPoints = socialStatusPoints;
@@ -26,6 +27,7 @@ public class Housewife implements Serializable {
         this.skinTone = skinTone;
         this.hairColor = hairColor;
         this.hairStyle = hairStyle;
+        this.mysteryItems = mysteryItems;
     }
 
     public enum Type {
@@ -90,9 +92,12 @@ public class Housewife implements Serializable {
 
     @Override
     public String toString() {
-        return "Housewife [id=" + id + ", name=" + name + ", socialStatusPoints="
-                + socialStatusPoints + ", type=" + type + ", skinTone=" + Arrays.toString(skinTone)
-                + ", hairColor=" + hairColor + ", hairStyle=" + hairStyle + "]";
+        return "Housewife [id=" + id + ", name=" + name + ", socialStatusPoints=" + socialStatusPoints + ", type="
+                + type + ", skinTone=" + Arrays.toString(skinTone) + ", hairColor=" + hairColor + ", hairStyle="
+                + hairStyle + "]";
     }
 
+    public Integer[] getMysteryItems() {
+        return mysteryItems;
+    }
 }
