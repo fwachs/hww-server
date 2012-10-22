@@ -45,7 +45,7 @@
         <property name="pool">
 	        <bean class="redis.clients.jedis.JedisPool">
 		        <constructor-arg index="0" ref="jedisPoolConfig"/>
-		        <constructor-arg index="1" value="localhost"/>
+		        <constructor-arg index="1" value="ec2-184-72-11-123.us-west-1.compute.amazonaws.com"/>
 		        <constructor-arg index="2" value="6379"/>
 		        <constructor-arg index="3" value="5000"/>
 		    </bean>
@@ -76,7 +76,7 @@
         <property name="pool">
 	        <bean class="redis.clients.jedis.JedisPool">
 		        <constructor-arg index="0" ref="jedisPoolConfig"/>
-		        <constructor-arg index="1" value="localhost"/>
+		        <constructor-arg index="1" value="ec2-184-72-11-123.us-west-1.compute.amazonaws.com"/>
 		        <constructor-arg index="2" value="6379"/>
 		        <constructor-arg index="3" value="5000"/>
 		    </bean>
