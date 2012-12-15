@@ -2,6 +2,7 @@ package com.twoclams.hww.server.model;
 
 import java.io.Serializable;
 import java.util.Arrays;
+import java.util.Map;
 
 public class Housewife implements Serializable {
 
@@ -14,12 +15,14 @@ public class Housewife implements Serializable {
     private int hairColor;
     private int hairStyle;
     private Integer[] mysteryItems;
+    private Map<String, String> clothingItems;
 
     public Housewife() {
+        
     }
 
     public Housewife(String papayaUserId, String name, int socialStatusPoints, Type type, Integer[] skinTone,
-            int hairColor, int hairStyle, Integer[] mysteryItems) {
+            int hairColor, int hairStyle, Integer[] mysteryItems, Map<String, String> clothingItems) {
         this.id = papayaUserId;
         this.name = name;
         this.socialStatusPoints = socialStatusPoints;
@@ -28,6 +31,7 @@ public class Housewife implements Serializable {
         this.hairColor = hairColor;
         this.hairStyle = hairStyle;
         this.mysteryItems = mysteryItems;
+        this.clothingItems = clothingItems;
     }
 
     public enum Type {
@@ -99,5 +103,9 @@ public class Housewife implements Serializable {
 
     public Integer[] getMysteryItems() {
         return mysteryItems;
+    }
+
+    public Map<String, String> getClothingItems() {
+        return clothingItems;
     }
 }

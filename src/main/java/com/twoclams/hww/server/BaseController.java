@@ -2,7 +2,10 @@ package com.twoclams.hww.server;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -102,7 +105,16 @@ public class BaseController {
         }
         Integer hairColor = wifeJson.getInt("hairColor");
         Integer hairStyle = wifeJson.getInt("hairStyle");
-        return new Housewife(id, wifeName, socialStatusPoints, type, skinTone, hairColor, hairStyle, mysteryItems);
+        JSONObject clothingItemsJson = wifeJson.optJSONObject("clothingItems");
+        Map<String, String> clothingItems = new HashMap<String, String> ();
+        if (clothingItems != null) {
+            for (Iterator iterator = clothingItemsJson.keys(); iterator.hasNext();) {
+                String key = (String) iterator.next();
+                clothingItems.put(key, clothingItemsJson.get(key).toString());
+            }
+            
+        }
+        return new Housewife(id, wifeName, socialStatusPoints, type, skinTone, hairColor, hairStyle, mysteryItems, clothingItems);
     }
 
     protected House buildHouse(String type, String level, Integer itemId, String furnituresJsonStr, String storageJsonStr,

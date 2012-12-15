@@ -1,5 +1,6 @@
 package com.twoclams.hww.server.service.impl;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -96,7 +97,7 @@ public class UsersServiceImpl implements UsersService {
         Housewife wife = findHousewife(papayaUserId);
         if (wife == null) {
             wife = new Housewife("123", "MysteriousWife", 345000, Housewife.Type.Modern, new Integer[] { 85, 79, 66 },
-                    2, 3, new Integer[] {});
+                    2, 3, new Integer[] {}, new HashMap<String, String>());
         }
         response.setWife(wife);
         response.setHouseLevel(3);
@@ -118,7 +119,7 @@ public class UsersServiceImpl implements UsersService {
         Housewife wife = findHousewife(papayaUserId);
         if (wife == null) {
             wife = new Housewife("12323", "MysteriousWife", 3000, Housewife.Type.Modern, new Integer[] { 85, 79, 66 },
-                    2, 3, new Integer[] {});
+                    2, 3, new Integer[] {}, new HashMap<String, String>());
         }
         return wife;
     }
