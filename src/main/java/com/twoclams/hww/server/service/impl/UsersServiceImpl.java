@@ -115,12 +115,13 @@ public class UsersServiceImpl implements UsersService {
 
     @Override
     public Housewife findBestHousewife() {
-        String papayaUserId = statusDao.getHighestScore();
-        Housewife wife = findHousewife(papayaUserId);
+        Housewife bestwife = statusDao.getHighestScore();
+        Housewife wife = findHousewife(bestwife.getId());
         if (wife == null) {
             wife = new Housewife("12323", "MysteriousWife", 3000, Housewife.Type.Modern, new Integer[] { 85, 79, 66 },
                     2, 3, new Integer[] {}, new HashMap<String, String>());
         }
+        wife.setSocialStatusPoints(bestwife.getSocialStatusPoints());
         return wife;
     }
 

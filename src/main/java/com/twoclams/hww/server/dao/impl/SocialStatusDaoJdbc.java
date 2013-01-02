@@ -1,5 +1,10 @@
 package com.twoclams.hww.server.dao.impl;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
+import org.springframework.dao.DataAccessException;
+import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcDaoSupport;
 
@@ -11,7 +16,10 @@ public class SocialStatusDaoJdbc extends NamedParameterJdbcDaoSupport implements
 
     private static final String UPDATE_POINTS = "update wife_status_points set points=:points where papayaUserId=:papayaUserId";
 
-    private static final String GET_HIGHSCORE = "select papayaUserId from wife_status_points order by points desc limit 1";
+    private static final String GET_HIGHSCORE = 
+            "select papayaUserId, (points - last_week_score) as points from wife_status_points order by points desc limit 1"; 
+//          "select papayaUserId from wife_status_points order by points desc limit 1";
+
     @Override
     public void updateSocialStatusPoints(Housewife housewife) {
         MapSqlParameterSource params = new MapSqlParameterSource();
@@ -24,9 +32,22 @@ public class SocialStatusDaoJdbc extends NamedParameterJdbcDaoSupport implements
     }
 
     @Override
-    public String getHighestScore() {
+    public Housewife getHighestScore() {
         MapSqlParameterSource params = new MapSqlParameterSource();
-        return this.getNamedParameterJdbcTemplate().queryForObject(GET_HIGHSCORE, params, String.class);
+        Housewife obj = this.getNamedParameterJdbcTemplate().query(GET_HIGHSCORE, params,
+                new ObjectResultSetExtractor());
+        return obj;
     }
 
+    private class ObjectResultSetExtractor implements ResultSetExtractor<Housewife> {
+
+        @Override
+        public Housewife extractData(ResultSet rs) throws SQLException, DataAccessException {
+            Housewife wife = new Housewife();
+            wife.setSocialStatusPoints(rs.getInt("points"));
+            wife.setId(rs.getString("papayaUserId"));
+            return wife;
+        }
+
+    }
 }

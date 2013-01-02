@@ -6,5 +6,5 @@ public interface SocialStatusDao {
 
     void updateSocialStatusPoints(Housewife housewife);
 
-    String getHighestScore();
+    Housewife getHighestScore();
 }
