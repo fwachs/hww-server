@@ -44,8 +44,10 @@ public class SocialStatusDaoJdbc extends NamedParameterJdbcDaoSupport implements
         @Override
         public Housewife extractData(ResultSet rs) throws SQLException, DataAccessException {
             Housewife wife = new Housewife();
-            wife.setSocialStatusPoints(rs.getInt("points"));
-            wife.setId(rs.getString("papayaUserId"));
+            if (rs.next()) {
+                wife.setSocialStatusPoints(rs.getInt("points"));
+                wife.setId(rs.getString("papayaUserId"));    
+            }
             return wife;
         }
 
