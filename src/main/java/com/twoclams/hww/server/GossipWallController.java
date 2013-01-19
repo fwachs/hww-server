@@ -1,6 +1,8 @@
 package com.twoclams.hww.server;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -31,21 +33,31 @@ public class GossipWallController extends BaseController {
 
     private static final Log logger = LogFactory.getLog(GossipWallController.class);
 
+    private static List<String> bannedPapayaUserIds = new ArrayList<String>();
+
     @Autowired
     private UsersService userService;
 
     @Autowired
     private GossipWallService gossipWallService;
 
+    static {
+        bannedPapayaUserIds.add("111038210");
+    }
+
     @RequestMapping(value = "/postGossip", method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
     public String postGossip(HttpServletRequest request, @ModelAttribute GossipWallMessage message)
             throws IOException, JSONException {
-        if (!StringUtils.isEmpty(message.getMessage())) {
-            gossipWallService.postGossipWall(message);
+        if (!StringUtils.isEmpty(message.getMessage()) && isBanned(message.getPapayaUserId())) {
+//            gossipWallService.postGossipWall(message);
         }
         return getLatestGossipMessages(null, request);
+    }
+
+    private boolean isBanned(String papayaUserId) {
+        return !bannedPapayaUserIds.contains(papayaUserId);
     }
 
     @RequestMapping(value = "/getLatestGossipMessages")

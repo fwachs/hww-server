@@ -2,6 +2,7 @@ package com.twoclams.hww.server.dao.impl;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -13,26 +14,34 @@ import com.twoclams.hww.server.dao.GossipMessageDao;
 import com.twoclams.hww.server.model.GossipWallMessage;
 
 public class GossipMessagesDaoJdbc extends NamedParameterJdbcDaoSupport implements GossipMessageDao {
-    private static final String SAVE_GOSSIP_MESSAGE =
-              " INSERT INTO wall_messages (papayaUserId, message, housewife_name, house_level, created_on)"
+    private static final String SAVE_GOSSIP_MESSAGE = " INSERT INTO wall_messages (papayaUserId, message, housewife_name, house_level, created_on)"
             + " VALUES (:papayaUserId, :message, :housewife_name, :house_level, :created_on)";
 
     private static final String SELECT_LATEST_GOSSIP_MESSAGES = "select * from wall_messages order by created_on desc limit 15";
 
     @Override
     public List<GossipWallMessage> findLatestMessages() {
-        MapSqlParameterSource params = new MapSqlParameterSource();
-        return getNamedParameterJdbcTemplate().query(SELECT_LATEST_GOSSIP_MESSAGES, params,
-                new WallMessageRowMapper());
+        List<GossipWallMessage> hardcodeMessages = new ArrayList<GossipWallMessage>();
+        GossipWallMessage message = new GossipWallMessage(
+                "85085972",
+                "Sorry everyone, chat has been disabled for a few days. Please enjoy the game, chat will be back next week when we have an update!",
+                "admin6");
+        message.update();
+        hardcodeMessages.add(message);
+        return hardcodeMessages;
+        // MapSqlParameterSource params = new MapSqlParameterSource();
+        // return
+        // getNamedParameterJdbcTemplate().query(SELECT_LATEST_GOSSIP_MESSAGES,
+        // params,
+        // new WallMessageRowMapper());
     }
 
     private class WallMessageRowMapper implements RowMapper<GossipWallMessage> {
 
         @Override
         public GossipWallMessage mapRow(ResultSet rs, int rowNum) throws SQLException {
-            GossipWallMessage message = new GossipWallMessage(rs.getString("message"),
-                    rs.getString("housewife_name"), rs.getInt("house_level"),
-                    rs.getTimestamp("created_on"));
+            GossipWallMessage message = new GossipWallMessage(rs.getString("message"), rs.getString("housewife_name"),
+                    rs.getInt("house_level"), rs.getTimestamp("created_on"));
             return message;
         }
 
