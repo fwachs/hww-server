@@ -95,7 +95,7 @@ public class BaseController {
         for (int i = 0; i < jsonSkinTone.length(); i++) {
             skinTone[i] = jsonSkinTone.getInt(i);
         }
-        Integer[] mysteryItems = new Integer[]{};
+        Integer[] mysteryItems = new Integer[] {};
         if (wifeJson.opt("mysteryItems") != null) {
             JSONArray jsonMysteryItems = wifeJson.getJSONArray("mysteryItems");
             mysteryItems = new Integer[jsonMysteryItems.length()];
@@ -106,19 +106,21 @@ public class BaseController {
         Integer hairColor = wifeJson.getInt("hairColor");
         Integer hairStyle = wifeJson.getInt("hairStyle");
         JSONObject clothingItemsJson = wifeJson.optJSONObject("clothingItems");
-        Map<String, String> clothingItems = new HashMap<String, String> ();
-        if (clothingItems != null) {
+        Map<String, String> clothingItems = new HashMap<String, String>();
+        if (clothingItemsJson != null) {
             for (Iterator iterator = clothingItemsJson.keys(); iterator.hasNext();) {
                 String key = (String) iterator.next();
                 clothingItems.put(key, clothingItemsJson.get(key).toString());
             }
-            
+
         }
-        return new Housewife(id, wifeName, socialStatusPoints, type, skinTone, hairColor, hairStyle, mysteryItems, clothingItems);
+        Integer lastMissionId = wifeJson.optInt("lastMissionId");
+        return new Housewife(id, wifeName, socialStatusPoints, type, skinTone, hairColor, hairStyle, mysteryItems,
+                clothingItems, lastMissionId);
     }
 
-    protected House buildHouse(String type, String level, Integer itemId, String furnituresJsonStr, String storageJsonStr,
-            String customTilesJsonStr) {
+    protected House buildHouse(String type, String level, Integer itemId, String furnituresJsonStr,
+            String storageJsonStr, String customTilesJsonStr) {
         String[] customTiles = customTilesJsonStr.replace("[", "").replace("]", "").split("},");
         List<HouseTile> tiles = new ArrayList<HouseTile>();
         for (String customTile : customTiles) {
@@ -207,7 +209,7 @@ public class BaseController {
         Collections.sort(itemIds);
         Integer itemId = 1;
         if (!itemIds.isEmpty()) {
-            itemId = itemIds.get(itemIds.size()-1);
+            itemId = itemIds.get(itemIds.size() - 1);
         }
         return new House(type, level, houseFurnitures, houseStorage, tiles, papayaUserId, itemId + 1);
     }

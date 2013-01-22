@@ -16,13 +16,14 @@ public class Housewife implements Serializable {
     private int hairStyle;
     private Integer[] mysteryItems;
     private Map<String, String> clothingItems;
+    private Integer lastMissionId;
 
     public Housewife() {
         
     }
 
     public Housewife(String papayaUserId, String name, int socialStatusPoints, Type type, Integer[] skinTone,
-            int hairColor, int hairStyle, Integer[] mysteryItems, Map<String, String> clothingItems) {
+            int hairColor, int hairStyle, Integer[] mysteryItems, Map<String, String> clothingItems, Integer lastMissionId) {
         this.id = papayaUserId;
         this.name = name;
         this.socialStatusPoints = socialStatusPoints;
@@ -32,6 +33,7 @@ public class Housewife implements Serializable {
         this.hairStyle = hairStyle;
         this.mysteryItems = mysteryItems;
         this.clothingItems = clothingItems;
+        this.lastMissionId = lastMissionId;
     }
 
     public enum Type {
@@ -107,5 +109,13 @@ public class Housewife implements Serializable {
 
     public Map<String, String> getClothingItems() {
         return clothingItems;
+    }
+
+    public Integer getLastMissionId() {
+        return lastMissionId;
+    }
+
+    public void setLastMissionId(Integer lastMissionId) {
+        this.lastMissionId = lastMissionId;
     }
 }
