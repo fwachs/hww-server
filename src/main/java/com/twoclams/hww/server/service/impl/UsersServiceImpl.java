@@ -97,7 +97,7 @@ public class UsersServiceImpl implements UsersService {
         Housewife wife = findHousewife(papayaUserId);
         if (wife == null) {
             wife = new Housewife("123", "MysteriousWife", 345000, Housewife.Type.Modern, new Integer[] { 85, 79, 66 },
-                    2, 3, new Integer[] {}, new HashMap<String, String>());
+                    2, 3, new Integer[] {}, new HashMap<String, String>(), 0);
         }
         response.setWife(wife);
         response.setHouseLevel(3);
@@ -119,7 +119,7 @@ public class UsersServiceImpl implements UsersService {
         Housewife wife = findHousewife(bestwife.getId());
         if (wife == null) {
             wife = new Housewife("12323", "MysteriousWife", 3000, Housewife.Type.Modern, new Integer[] { 85, 79, 66 },
-                    2, 3, new Integer[] {}, new HashMap<String, String>());
+                    2, 3, new Integer[] {}, new HashMap<String, String>(), 0);
         }
         wife.setSocialStatusPoints(bestwife.getSocialStatusPoints());
         return wife;
