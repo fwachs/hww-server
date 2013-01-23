@@ -119,6 +119,9 @@ public class Housewife implements Serializable {
     }
 
     public void setLastMissionId(Integer lastMissionId) {
+        if (lastMissionId == null || new Integer(0).equals(lastMissionId)) {
+            this.lastMissionId = 1;
+        }
         this.lastMissionId = lastMissionId;
     }
 }
