@@ -112,6 +112,9 @@ public class Housewife implements Serializable {
     }
 
     public Integer getLastMissionId() {
+        if (lastMissionId == null) {
+            return new Integer(1);
+        }
         return lastMissionId;
     }
 
