@@ -2,6 +2,7 @@ package com.twoclams.hww.server.model;
 
 import java.io.Serializable;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Map;
 
 public class Housewife implements Serializable {
@@ -124,4 +125,11 @@ public class Housewife implements Serializable {
         }
         this.lastMissionId = lastMissionId;
     }
+
+    public void nullify() {
+        this.skinTone = new Integer[] {};
+        this.mysteryItems = new Integer[] {};
+        this.clothingItems = new HashMap<String, String>();
+    }
+
 }

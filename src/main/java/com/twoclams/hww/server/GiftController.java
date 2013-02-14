@@ -20,12 +20,17 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import com.twoclams.hww.server.model.Gift;
 import com.twoclams.hww.server.model.SimpleResponse;
 import com.twoclams.hww.server.service.GiftService;
+import com.twoclams.hww.server.service.UserReward;
+import com.twoclams.hww.server.service.UsersService;
 
 @Controller
 public class GiftController extends BaseController {
 
     @Autowired
     private GiftService giftService;
+
+    @Autowired
+    private UsersService userService;
 
     @RequestMapping(value = "/sendGift")
     @ResponseStatus(HttpStatus.OK)
@@ -44,7 +49,9 @@ public class GiftController extends BaseController {
             HttpServletRequest request) throws IOException, JSONException {
         Map<String, Object> response = new HashMap<String, Object>();
         List<Gift> userGifts = giftService.retrieveAllGifts(papayaUserId);
+        List<UserReward> rewards = userService.getPendingRewards(papayaUserId);
         response.put("gifts", userGifts);
+        response.put("rewards", rewards);
         return this.getDefaultSerializer().deepSerialize(response);
     }
 }

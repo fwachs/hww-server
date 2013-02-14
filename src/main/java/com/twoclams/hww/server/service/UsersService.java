@@ -26,7 +26,7 @@ public interface UsersService {
 
     OtherPlayerProfileResponse getOtherPlayerProfile(String papayaUserId);
 
-    Housewife findBestHousewife();
+    List<Housewife> findBestHousewife();
 
     Reward getDailyBonus(String papayaUserId);
 
@@ -47,5 +47,11 @@ public interface UsersService {
     SimpleResponse synchronizeRealstate(String papayaUserId, Realstate realstate);
 
     Map<String, Housewife> checkUsers(List<String> papayaUserIds);
+
+    List<Housewife> findTop25();
+
+    void finishTournament();
+
+    List<UserReward> getPendingRewards(String papayaUserId);
 
 }

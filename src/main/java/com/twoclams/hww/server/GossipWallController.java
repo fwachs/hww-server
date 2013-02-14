@@ -1,14 +1,20 @@
 package com.twoclams.hww.server;
 
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.joda.time.LocalDate;
 import org.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomNumberEditor;
@@ -48,10 +54,10 @@ public class GossipWallController extends BaseController {
     @RequestMapping(value = "/postGossip", method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
-    public String postGossip(HttpServletRequest request, @ModelAttribute GossipWallMessage message)
-            throws IOException, JSONException {
+    public String postGossip(HttpServletRequest request, @ModelAttribute GossipWallMessage message) throws IOException,
+            JSONException {
         if (!StringUtils.isEmpty(message.getMessage()) && isBanned(message.getPapayaUserId())) {
-//            gossipWallService.postGossipWall(message);
+            // gossipWallService.postGossipWall(message);
         }
         return getLatestGossipMessages(null, request);
     }
@@ -63,15 +69,34 @@ public class GossipWallController extends BaseController {
     @RequestMapping(value = "/getLatestGossipMessages")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
-    public String getLatestGossipMessages(@ModelAttribute Housewife housewife,
-            HttpServletRequest request) throws IOException, JSONException {
+    public String getLatestGossipMessages(@ModelAttribute Housewife housewife, HttpServletRequest request)
+            throws IOException, JSONException {
         if (housewife != null && StringUtils.isNotEmpty(housewife.getId())) {
             logger.info("HousewifeBuilt: " + housewife.toString());
             userService.synchronizeHousewife(housewife);
         }
+        
+        LocalDate localDate = new LocalDate(new Date());
+        LocalDate nextSunday = this.calcNextSunday(localDate);
+        DateFormat dateFormatter = new SimpleDateFormat("MM/dd/yyyy");
         GossipWallResponse response = gossipWallService.findGossipWallResponse();
-        return getDefaultSerializer().include("messages").include("skinTone")
-                .deepSerialize(response);
+        response.setTournamentEndDate(dateFormatter.format(nextSunday.toDate()));
+
+        return getDefaultSerializer().include("messages").include("skinTone").deepSerialize(response);
+    }
+
+    @RequestMapping(value = "/tournament")
+    @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
+    public String tournament(HttpServletRequest request) throws IOException, JSONException {
+        LocalDate localDate = new LocalDate(new Date());
+        LocalDate nextSunday = this.calcNextSunday(localDate);
+        List<Housewife> top25 = userService.findTop25();
+        DateFormat dateFormatter = new SimpleDateFormat("MM/dd/yyyy");
+        Map<String, Object> params = new HashMap<String, Object>();
+        params.put("players", top25);
+        params.put("tournamentEndDate", dateFormatter.format(nextSunday.toDate()));
+        return getDefaultSerializer().exclude("clothingItems", "mysteryItems", "skinTone").deepSerialize(params);
     }
 
     @InitBinder

@@ -38,6 +38,7 @@ import com.twoclams.hww.server.model.Realstate;
 import com.twoclams.hww.server.model.SimpleResponse;
 import com.twoclams.hww.server.model.SynchronizeResponse;
 import com.twoclams.hww.server.model.Wallet;
+import com.twoclams.hww.server.service.UserReward;
 import com.twoclams.hww.server.service.UsersService;
 import com.twoclams.hww.server.utils.DateUtils;
 
@@ -229,4 +230,26 @@ public class HousewifeWarsController extends BaseController {
         return this.getDefaultSerializer().deepSerialize(response);
     }
 
+
+    @RequestMapping(value = "/finishTournament")
+    @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
+    public String finishTournament(HttpServletRequest request) {
+        Map<String, Object> response = new HashMap<String, Object>();
+        response.put("response", "ok");
+        this.userService.finishTournament();
+        return this.getDefaultSerializer().deepSerialize(response);
+    }
+
+    @RequestMapping(value = "/checkForRewards")
+    @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
+    public String checkForRewards(@RequestParam(value = "papayaUserId") String papayaUserId, HttpServletRequest request)
+            throws IOException, JSONException {
+        Map<String, Object> response = new HashMap<String, Object>();
+
+        List<UserReward> rewards = userService.getPendingRewards(papayaUserId);
+        response.put("rewards", rewards);
+        return this.getDefaultSerializer().deepSerialize(response);
+    }
 }

@@ -1,5 +1,6 @@
 package com.twoclams.hww.server.service.impl;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -11,6 +12,7 @@ import org.joda.time.Days;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.twoclams.hww.server.cache.CacheManager;
 import com.twoclams.hww.server.dao.SocialStatusDao;
@@ -25,6 +27,7 @@ import com.twoclams.hww.server.model.Realstate;
 import com.twoclams.hww.server.model.SimpleResponse;
 import com.twoclams.hww.server.model.SynchronizeResponse;
 import com.twoclams.hww.server.model.Wallet;
+import com.twoclams.hww.server.service.UserReward;
 import com.twoclams.hww.server.service.UsersService;
 import com.twoclams.hww.server.utils.DateUtils;
 
@@ -114,15 +117,36 @@ public class UsersServiceImpl implements UsersService {
     }
 
     @Override
-    public Housewife findBestHousewife() {
-        Housewife bestwife = statusDao.getHighestScore();
-        Housewife wife = findHousewife(bestwife.getId());
-        if (wife == null) {
-            wife = new Housewife("12323", "MysteriousWife", 3000, Housewife.Type.Modern, new Integer[] { 85, 79, 66 },
-                    2, 3, new Integer[] {}, new HashMap<String, String>(), 0);
+    public List<Housewife> findBestHousewife() {
+        List<Housewife> bestwifes = statusDao.getHighestScore();
+        List<Housewife> wives = new ArrayList<Housewife>();
+        for (Housewife bestwife : bestwifes) {
+            Housewife wife = findHousewife(bestwife.getId());
+            if (wife == null) {
+                wife = new Housewife("12323", "MysteriousWife", 3000, Housewife.Type.Modern,
+                        new Integer[] { 85, 79, 66 }, 2, 3, new Integer[] {}, new HashMap<String, String>(), 0);
+            }
+            wife.setSocialStatusPoints(bestwife.getSocialStatusPoints());
+            wives.add(wife);
         }
-        wife.setSocialStatusPoints(bestwife.getSocialStatusPoints());
-        return wife;
+        return wives;
+    }
+
+    @Override
+    public List<Housewife> findTop25() {
+        List<Housewife> bestwifes = statusDao.getTop25();
+        List<Housewife> wives = new ArrayList<Housewife>();
+        for (Housewife bestwife : bestwifes) {
+            Housewife wife = findHousewife(bestwife.getId());
+            if (wife == null) {
+                wife = new Housewife("12323", "MysteriousWife", 3000, Housewife.Type.Modern,
+                        new Integer[] { 85, 79, 66 }, 2, 3, new Integer[] {}, new HashMap<String, String>(), 0);
+            }
+            wife.nullify();
+            wife.setSocialStatusPoints(bestwife.getSocialStatusPoints());
+            wives.add(wife);
+        }
+        return wives;
     }
 
     private Housewife findHousewife(String papayaUserId) {
@@ -145,17 +169,12 @@ public class UsersServiceImpl implements UsersService {
             DateTime start = new DateTime(DateUtils.getDayOf(dailyBonus.getLastLogin()));
             DateTime end = new DateTime(DateUtils.getCurrentDay());
             Days days = Days.daysBetween(start, end);
-            if (days.getDays() == 1) {
+            if (days.getDays() >= 1) {
                 dailyBonus.increment();
                 if (dailyBonus.getCount() == 6) {
                     dailyBonus.reset();
                 }
                 reward = dailyBonus.getReward();
-            } else {
-                if (days.getDays() != 0) {
-                    dailyBonus.reset();
-                    reward = dailyBonus.getReward();
-                }
             }
         }
         wifeDao.store(getDailyRewardKey(papayaUserId), dailyBonus, -1);
@@ -248,6 +267,36 @@ public class UsersServiceImpl implements UsersService {
     public Map<String, Housewife> checkUsers(List<String> papayaUserIds) {
         Map<String, Housewife> housewifePerPapayaUserId = wifeDao.get(Housewife.class, papayaUserIds.toArray(new String[]{}));
         return housewifePerPapayaUserId;
+    }
+
+    @Override
+    @Transactional
+    public void finishTournament() {
+        List<Housewife> top25 = this.statusDao.getTop25();
+        for (int i = 0; i < top25.size(); i++) {
+            Housewife wife = top25.get(i);
+            int amount = 0;
+            if (i+1 == 1) {
+                amount = 10;
+            } else if (i+1 == 2) {
+                amount = 5;
+            } else if (i+1 == 3) {
+                amount = 3;
+            } else {
+                amount = 1;
+            }
+            statusDao.reward(wife.getId(), amount, "Diamonds");
+        }
+    }
+
+    @Override
+    @Transactional
+    public List<UserReward> getPendingRewards(String papayaUserId) {
+        List<UserReward> rewards = statusDao.getPendingRewards(papayaUserId);
+        for (UserReward reward : rewards) {
+            statusDao.rewardClaimed(reward.getId());
+        }
+        return rewards;
     }
 
 }

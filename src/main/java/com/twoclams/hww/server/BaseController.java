@@ -12,6 +12,8 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.joda.time.DateTimeConstants;
+import org.joda.time.LocalDate;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -270,5 +272,12 @@ public class BaseController {
             }
         }
         return strings.toArray(new String[] {});
+    }
+
+    public LocalDate calcNextSunday(LocalDate d) {    
+        if (d.getDayOfWeek() >= DateTimeConstants.SUNDAY) {
+            d = d.plusWeeks(1);
+        }    
+        return d.withDayOfWeek(DateTimeConstants.SUNDAY);
     }
 }
