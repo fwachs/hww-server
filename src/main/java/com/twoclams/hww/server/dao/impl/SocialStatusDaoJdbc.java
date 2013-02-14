@@ -14,8 +14,8 @@ import com.twoclams.hww.server.service.UserReward;
 
 public class SocialStatusDaoJdbc extends NamedParameterJdbcDaoSupport implements SocialStatusDao {
     private static final String INSERT_REWARD = 
-             "INSERT INTO wife_rewards (papayaUserId, amount, currency, used) " +
-    		" VALUES (:papayaUserId, :amount, :currency, :used)";
+             "INSERT INTO wife_rewards (papayaUserId, amount, currency, reason, used) " +
+    		" VALUES (:papayaUserId, :amount, :currency, :reason, :used)";
 
     private static final String INSERT_POINTS = "insert into wife_status_points (papayaUserId, points) VALUES (:papayaUserId, :points)";
 
@@ -73,6 +73,7 @@ public class SocialStatusDaoJdbc extends NamedParameterJdbcDaoSupport implements
         params.addValue("papayaUserId", Long.valueOf(papayaUserId));
         params.addValue("amount", amount);
         params.addValue("currency", currency);
+        params.addValue("reason", "You won because you succeded in the tournament!");
         params.addValue("used", Boolean.FALSE);
         getNamedParameterJdbcTemplate().update(INSERT_REWARD, params);
     }
@@ -93,7 +94,8 @@ public class SocialStatusDaoJdbc extends NamedParameterJdbcDaoSupport implements
             UserReward reward = new UserReward();
             reward.setCurrency(rs.getString("currency"));
             reward.setAmount(rs.getInt("amount"));
-            reward.setId(rs.getLong("id"));    
+            reward.setId(rs.getLong("id"));
+            reward.setReason(rs.getString("reason"));
             return reward;
         }
 

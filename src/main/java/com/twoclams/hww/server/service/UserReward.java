@@ -5,6 +5,7 @@ public class UserReward {
     private long id;
     private int amount;
     private String currency;
+    private String reason;
 
     public int getAmount() {
         return amount;
@@ -28,6 +29,14 @@ public class UserReward {
 
     public void setId(long id) {
         this.id = id;
+    }
+
+    public String getReason() {
+        return reason;
+    }
+
+    public void setReason(String reason) {
+        this.reason = reason;
     }
 
 }
