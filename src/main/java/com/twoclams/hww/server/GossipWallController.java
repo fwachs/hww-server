@@ -71,11 +71,6 @@ public class GossipWallController extends BaseController {
     @ResponseBody
     public String getLatestGossipMessages(@ModelAttribute Housewife housewife, HttpServletRequest request)
             throws IOException, JSONException {
-        if (housewife != null && StringUtils.isNotEmpty(housewife.getId())) {
-            logger.info("HousewifeBuilt: " + housewife.toString());
-            userService.synchronizeHousewife(housewife);
-        }
-        
         LocalDate localDate = new LocalDate(new Date());
         LocalDate nextSunday = this.calcNextSunday(localDate);
         DateFormat dateFormatter = new SimpleDateFormat("MM/dd/yyyy");
