@@ -8,7 +8,7 @@ public interface GossipWallService {
 
     void postGossipWall(GossipWallMessage message);
 
-    GossipWallResponse findGossipWallResponse();
+    GossipWallResponse findGossipWallResponse(String papayaUserId);
 
     TournamentResponse findTournamentResponse();
 

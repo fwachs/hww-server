@@ -54,4 +54,6 @@ public interface UsersService {
 
     List<UserReward> getPendingRewards(String papayaUserId);
 
+    int getUserWeeklyScore(String papayaUserId);
+
 }

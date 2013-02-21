@@ -79,9 +79,8 @@ public class GossipWallController extends BaseController {
         LocalDate localDate = new LocalDate(new Date());
         LocalDate nextSunday = this.calcNextSunday(localDate);
         DateFormat dateFormatter = new SimpleDateFormat("MM/dd/yyyy");
-        GossipWallResponse response = gossipWallService.findGossipWallResponse();
+        GossipWallResponse response = gossipWallService.findGossipWallResponse(housewife.getId());
         response.setTournamentEndDate(dateFormatter.format(nextSunday.toDate()));
-
         return getDefaultSerializer().include("messages").include("skinTone").deepSerialize(response);
     }
 

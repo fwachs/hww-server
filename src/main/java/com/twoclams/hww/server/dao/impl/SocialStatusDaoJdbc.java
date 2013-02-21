@@ -27,6 +27,9 @@ public class SocialStatusDaoJdbc extends NamedParameterJdbcDaoSupport implements
     private static final String GET_HIGHSCORE = 
             "select papayaUserId, (points - last_week_score) as points from wife_status_points order by points desc limit 3"; 
 
+    private static final String GET_HIGHSCORE_FOR_USER = 
+            "select papayaUserId, (points - last_week_score) as points from wife_status_points where papayaUserId=:papayaUserId";
+
     @Override
     public void updateSocialStatusPoints(Housewife housewife) {
         MapSqlParameterSource params = new MapSqlParameterSource();
@@ -106,5 +109,17 @@ public class SocialStatusDaoJdbc extends NamedParameterJdbcDaoSupport implements
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("id", id);
         getNamedParameterJdbcTemplate().update("update wife_rewards set used = 1 where id=:id", params);
+    }
+
+    @Override
+    public int getWeeklyScore(String papayaUserId) {
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("papayaUserId", papayaUserId);
+        List<Housewife> obj = this.getNamedParameterJdbcTemplate().query(GET_HIGHSCORE_FOR_USER, params,
+                new ObjectResultSetExtractor());
+        if (obj.isEmpty()) {
+            return 0;
+        }
+        return obj.get(0).getSocialStatusPoints();
     }
 }

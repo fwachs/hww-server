@@ -31,13 +31,14 @@ public class GossipWallServiceImpl implements GossipWallService {
     }
 
     @Override
-    public GossipWallResponse findGossipWallResponse() {
+    public GossipWallResponse findGossipWallResponse(String papayaUserId) {
         GossipWallResponse response = new GossipWallResponse();
         List<Housewife> bestHousewifes = userService.findBestHousewife();
         response.setBestHouseWife(bestHousewifes.get(0));
         response.setSecondHouseWife(bestHousewifes.get(1));
         response.setThirdHouseWife(bestHousewifes.get(2));
         response.setMessages(messageDao.findLatestMessages());
+        response.setWeeklyScore(userService.getUserWeeklyScore(papayaUserId));
         return response;
     }
 

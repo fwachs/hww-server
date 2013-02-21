@@ -279,11 +279,11 @@ public class UsersServiceImpl implements UsersService {
             if (i+1 == 1) {
                 amount = 10;
             } else if (i+1 == 2) {
-                amount = 5;
+                amount = 7;
             } else if (i+1 == 3) {
-                amount = 3;
+                amount = 5;
             } else {
-                amount = 1;
+                amount = 2;
             }
             statusDao.reward(wife.getId(), amount, "Diamonds");
         }
@@ -297,6 +297,11 @@ public class UsersServiceImpl implements UsersService {
             statusDao.rewardClaimed(reward.getId());
         }
         return rewards;
+    }
+
+    @Override
+    public int getUserWeeklyScore(String papayaUserId) {
+        return statusDao.getWeeklyScore(papayaUserId);
     }
 
 }

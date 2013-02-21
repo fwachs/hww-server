@@ -19,4 +19,6 @@ public interface SocialStatusDao {
 
     void rewardClaimed(long id);
 
+    int getWeeklyScore(String papayaUserId);
+
 }

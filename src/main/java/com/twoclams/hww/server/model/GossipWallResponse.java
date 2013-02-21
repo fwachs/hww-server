@@ -9,6 +9,7 @@ public class GossipWallResponse {
     private Housewife secondHouseWife;
     private Housewife thirdHouseWife;
     private String tournamentEndDate;
+    private int weeklyScore;
 
     public List<GossipWallMessage> getMessages() {
         return messages;
@@ -48,6 +49,14 @@ public class GossipWallResponse {
 
     public void setTournamentEndDate(String tournamentEndDate) {
         this.tournamentEndDate = tournamentEndDate;
+    }
+
+    public int getWeeklyScore() {
+        return weeklyScore;
+    }
+
+    public void setWeeklyScore(int weeklyScore) {
+        this.weeklyScore = weeklyScore;
     }
 
 }
