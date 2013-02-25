@@ -132,4 +132,8 @@ public class Housewife implements Serializable {
         this.clothingItems = new HashMap<String, String>();
     }
 
+    public void careName() {
+        this.name = name.replace("Ã", "A");
+    }
+
 }

@@ -144,6 +144,7 @@ public class UsersServiceImpl implements UsersService {
             }
             wife.nullify();
             wife.setSocialStatusPoints(bestwife.getSocialStatusPoints());
+            wife.careName();
             wives.add(wife);
         }
         return wives;
