@@ -118,8 +118,6 @@ public class HousewifeWarsController extends BaseController {
 
         try {
             logger.info("debugging house json: " + houseJsonStr);
-            houseJsonStr = houseJsonStr.replace("{row:,col:,height:,type:custom-floor,id:NoneNone,furnitureId:175},",
-                    "");
             house = this.buildHouse(new JSONObject(houseJsonStr));
             userService.synchronizeHouse(house.getPapayaUserId(), house);
         } catch (JSONException e) {
