@@ -26,7 +26,7 @@ public class HouseFurniture implements Serializable {
 
     public HouseFurniture(JSONObject jsonFurniture) throws JSONException {
         this((Integer) jsonFurniture.get("itemId"), (Integer) jsonFurniture.get("top"),
-                (Integer) jsonFurniture.get("furnitureType"), (Integer) jsonFurniture
+                Integer.getInteger(jsonFurniture.get("furnitureType").toString()), (Integer) jsonFurniture
                         .get("isFlipped"), (Integer) jsonFurniture.get("left"));
     }
 
