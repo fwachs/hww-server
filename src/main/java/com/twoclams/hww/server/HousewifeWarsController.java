@@ -111,6 +111,7 @@ public class HousewifeWarsController extends BaseController {
         }
 
         try {
+            logger.info("debugging wife json: " + wifeJsonStr);
             housewife = this.buildWife(new JSONObject(wifeJsonStr));
         } catch (JSONException e) {
             logger.error("An error ocurred while processing wife json: " + wifeJsonStr, e);
