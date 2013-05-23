@@ -76,7 +76,7 @@ public class SocialStatusDaoJdbc extends NamedParameterJdbcDaoSupport implements
         params.addValue("papayaUserId", Long.valueOf(papayaUserId));
         params.addValue("amount", amount);
         params.addValue("currency", currency);
-        params.addValue("reason", "You won because you succeded in the tournament!");
+        params.addValue("reason", "You won the latest tournament!");
         params.addValue("used", Boolean.FALSE);
         getNamedParameterJdbcTemplate().update(INSERT_REWARD, params);
     }

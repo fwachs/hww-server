@@ -139,7 +139,7 @@ public class UsersServiceImpl implements UsersService {
         for (Housewife bestwife : bestwifes) {
             Housewife wife = findHousewife(bestwife.getId());
             if (wife == null) {
-                wife = new Housewife("12323", "MysteriousWife", 3000, Housewife.Type.Modern,
+                wife = new Housewife(bestwife.getId(), "MysteriousWife", 3000, Housewife.Type.Modern,
                         new Integer[] { 85, 79, 66 }, 2, 3, new Integer[] {}, new HashMap<String, String>(), 0);
             }
             wife.nullify();

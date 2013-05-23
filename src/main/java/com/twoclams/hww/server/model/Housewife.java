@@ -18,6 +18,8 @@ public class Housewife implements Serializable {
     private Integer[] mysteryItems;
     private Map<String, String> clothingItems;
     private Integer lastMissionId;
+    private String clamId;
+    private Map<String, String> socialNetwork;
 
     public Housewife() {
         
@@ -134,6 +136,22 @@ public class Housewife implements Serializable {
 
     public void careName() {
         this.name = name.replace("Ã", "A");
+    }
+
+    public String getClamId() {
+        return clamId;
+    }
+
+    public void setClamId(String clamId) {
+        this.clamId = clamId;
+    }
+
+    public Map<String, String> getSocialNetwork() {
+        return socialNetwork;
+    }
+
+    public void setSocialNetwork(Map<String, String> socialNetwork) {
+        this.socialNetwork = socialNetwork;
     }
 
 }

@@ -252,4 +252,15 @@ public class HousewifeWarsController extends BaseController {
         response.put("rewards", rewards);
         return this.getDefaultSerializer().deepSerialize(response);
     }
+
+    @RequestMapping(value = "/registerNewUser")
+    @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
+    public String registerNewUser(@RequestParam(value = "papayaUserId") String papayaUserId, HttpServletRequest request)
+            throws IOException, JSONException {
+        Map<String, Object> response = new HashMap<String, Object>();
+
+        response.put("id", 2312312);
+        return this.getDefaultSerializer().deepSerialize(response);
+    }
 }

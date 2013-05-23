@@ -26,9 +26,18 @@ public class HouseTile implements Serializable {
     }
 
     public HouseTile(JSONObject jsonTile) throws JSONException {
-        this((Integer) jsonTile.get("id"), (Integer) jsonTile.get("row"), (Integer) jsonTile
-                .get("col"), (String) jsonTile.get("type"), (Integer) jsonTile.get("height"),
-                ((Integer) jsonTile.get("furnitureId")).toString());
+        Integer id = Integer.valueOf(jsonTile.get("id").toString());
+        Integer row = (Integer) jsonTile.get("row");
+        Integer col = (Integer) jsonTile.get("col");
+        String type = (String) jsonTile.get("type");
+        Integer height = (Integer) jsonTile.get("height");
+        String furnitureId = ((Integer) jsonTile.get("furnitureId")).toString();
+        this.id = id;
+        this.row = row;
+        this.col = col;
+        this.type = type;
+        this.height = height;
+        this.furnitureId = furnitureId;
     }
 
     public Integer getId() {
