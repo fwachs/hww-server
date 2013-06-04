@@ -20,6 +20,20 @@
 	<context:annotation-config/>
 	<context:property-placeholder/>
 
+    <bean id="userIdentifierGenerator" 
+        class="com.twoclams.hww.server.RedisIdentifierGenerator"
+        destroy-method="shutdown">
+      <constructor-arg value="user.sequence"/>
+      <constructor-arg ref="jedisPool" />
+    </bean>
+
+     <bean id="jedisPool" class="redis.clients.jedis.JedisPool">
+         <constructor-arg index="0" ref="jedisPoolConfig"/>
+         <constructor-arg index="1" value="ec2-184-72-19-47.us-west-1.compute.amazonaws.com"/>
+         <constructor-arg index="2" value="6379"/>
+         <constructor-arg index="3" value="5000"/>
+     </bean>
+
 	<bean id="jedisPoolConfig" class="redis.clients.jedis.JedisPoolConfig"/>
 
 	<!--  *********************************** Wifes CACHE *********************************************************  -->
