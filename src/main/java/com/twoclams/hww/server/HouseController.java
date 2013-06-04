@@ -36,7 +36,9 @@ public class HouseController extends BaseController {
             @RequestParam(value = "furnitures") String furnituresJsonStr,
             @RequestParam(value = "storage") String storageJsonStr,
             @RequestParam(value = "customTiles") String customTilesJsonStr,
-            @RequestParam(value = "papayaUserId") String papayaUserId, HttpServletRequest request)
+            @RequestParam(value = "papayaUserId") String papayaUserId, 
+            @RequestParam(value = "socialId") String socialId,
+            HttpServletRequest request)
             throws IOException {
         String itemIdStr = request.getParameter("itemId");
         Integer itemId = new Integer(1000);
@@ -48,7 +50,7 @@ public class HouseController extends BaseController {
         House house = this.buildHouse(type, level, itemId, furnituresJsonStr, storageJsonStr,
                 customTilesJsonStr);
 
-        SimpleResponse response = userService.synchronizeHouse(papayaUserId, house);
+        SimpleResponse response = userService.synchronizeHouse(papayaUserId, socialId, house);
         return getDefaultSerializer().deepSerialize(response);
     }
 

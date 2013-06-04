@@ -30,7 +30,7 @@ public interface UsersService {
 
     Reward getDailyBonus(String papayaUserId);
 
-    SimpleResponse synchronizeHouse(String papayaUserId, House house);
+    SimpleResponse synchronizeHouse(String papayaUserId, String socialId, House house);
 
     House getHouse(String papayaUserId);
 

@@ -49,6 +49,9 @@ public class HousewifeWarsController extends BaseController {
     @Autowired
     private UsersService userService;
 
+    @Autowired
+    private IdentifierGenerator idGenerator;
+
     @RequestMapping(value = "/checkPlayersStatus")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
@@ -87,7 +90,9 @@ public class HousewifeWarsController extends BaseController {
             @RequestParam(value = "wallet") String walletJsonStr,
             @RequestParam(value = "passport") String passportJsonStr,
             @RequestParam(value = "house") String houseJsonStr,
-            @RequestParam(value = "realstate", required = false) String realstateJsonStr, HttpServletRequest request)
+            @RequestParam(value = "realstate", required = false) String realstateJsonStr,
+            @RequestParam(value = "socialId", required = false) String socialId,
+            HttpServletRequest request)
             throws IOException {
         Husband husband = null;
         Housewife housewife = null;
@@ -113,6 +118,7 @@ public class HousewifeWarsController extends BaseController {
         try {
             logger.info("debugging wife json: " + wifeJsonStr);
             housewife = this.buildWife(new JSONObject(wifeJsonStr));
+            housewife.setSocialId(socialId);
         } catch (JSONException e) {
             logger.error("An error ocurred while processing wife json: " + wifeJsonStr, e);
         }
@@ -120,7 +126,7 @@ public class HousewifeWarsController extends BaseController {
         try {
             logger.info("debugging house json: " + houseJsonStr);
             house = this.buildHouse(new JSONObject(houseJsonStr));
-            userService.synchronizeHouse(house.getPapayaUserId(), house);
+            userService.synchronizeHouse(house.getPapayaUserId(), socialId, house);
         } catch (JSONException e) {
             logger.error("An error ocurred while processing house json: " + houseJsonStr, e);
         }
@@ -256,11 +262,11 @@ public class HousewifeWarsController extends BaseController {
     @RequestMapping(value = "/registerNewUser")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
-    public String registerNewUser(@RequestParam(value = "papayaUserId") String papayaUserId, HttpServletRequest request)
+    public String registerNewUser(HttpServletRequest request)
             throws IOException, JSONException {
         Map<String, Object> response = new HashMap<String, Object>();
 
-        response.put("id", 2312312);
+        response.put("id", idGenerator.newId());
         return this.getDefaultSerializer().deepSerialize(response);
     }
 }

@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.joda.time.DateTime;
@@ -51,11 +52,17 @@ public class UsersServiceImpl implements UsersService {
         if (wife != null) {
             logger.info("Saving wife: " + wife.toString());
             wifeDao.store(getWifeKey(wife.getId()), wife, -1);
+            if (StringUtils.isNotEmpty(wife.getSocialId())) {
+                wifeDao.store(getWifesocialKey(wife.getSocialId()), wife, -1);
+            }
             statusDao.updateSocialStatusPoints(wife);
         }
         if (husband != null) {
             logger.info("Saving husband: " + husband.toString());
             husbandDao.store(getHusbandKey(husband.getPapayaUserId()), husband, -1);
+            if (StringUtils.isNotEmpty(wife.getSocialId())) {
+                husbandDao.store(getHusbandsocialKey(husband.getPapayaUserId()), husband, -1);
+            }
         }
         return getOKResponse();
     }
@@ -90,14 +97,14 @@ public class UsersServiceImpl implements UsersService {
     }
 
     @Override
-    public OtherPlayerProfileResponse getOtherPlayerProfile(String papayaUserId) {
+    public OtherPlayerProfileResponse getOtherPlayerProfile(String socialId) {
         OtherPlayerProfileResponse response = new OtherPlayerProfileResponse();
-        Husband husband = findHusband(papayaUserId);
+        Husband husband = (Husband) husbandDao.get(getHusbandsocialKey(socialId));
         if (husband == null) {
             husband = new Husband();
         }
         response.setHusband(husband);
-        Housewife wife = findHousewife(papayaUserId);
+        Housewife wife = (Housewife) wifeDao.get(getWifesocialKey(socialId));
         if (wife == null) {
             wife = new Housewife("123", "MysteriousWife", 345000, Housewife.Type.Modern, new Integer[] { 85, 79, 66 },
                     2, 3, new Integer[] {}, new HashMap<String, String>(), 0);
@@ -155,6 +162,14 @@ public class UsersServiceImpl implements UsersService {
         return wife;
     }
 
+    private String getHusbandsocialKey(String papayaUserId) {
+        return papayaUserId + "-husband";
+    }
+
+    private String getWifesocialKey(String papayaUserId) {
+        return papayaUserId + "-wife";
+    }
+
     private String getWifeKey(String papayaUserId) {
         return papayaUserId + "-wife";
     }
@@ -187,17 +202,27 @@ public class UsersServiceImpl implements UsersService {
     }
 
     @Override
-    public SimpleResponse synchronizeHouse(String papayaUserId, House house) {
+    public SimpleResponse synchronizeHouse(String papayaUserId, String socialId, House house) {
         logger.info("Saving house: " + house.toString());
         wifeDao.store(getHouseKey(papayaUserId), house, -1);
+        if (StringUtils.isNotEmpty(socialId)) {
+            wifeDao.store(getHouseSocialKey(socialId), house, -1);
+        }
         return new SimpleResponse();
+    }
+
+    private String getHouseSocialKey(String socialId) {
+        return "house-social" + socialId;
     }
 
     @Override
     public House getHouse(String papayaUserId) {
         House house = (House) wifeDao.get(getHouseKey(papayaUserId));
         if (house == null) {
-            house = new House();
+            house = (House) wifeDao.get(getHouseSocialKey(papayaUserId));
+            if (house == null) {
+                house = new House();
+            }
         }
         return house;
     }
